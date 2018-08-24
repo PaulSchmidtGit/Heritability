@@ -23,8 +23,8 @@ Holland |  |  |  |
 Piepho | X | °° | X |
 Cullis | X | X | X |
 Oakey | X | X | X |
-BLUP~BLUE | X | °° | X |
-sumdiv | X | °° | X |
+Reg | X | °° | X |
+SumDiv | X | °° | X |
 Simulated | ° | X | X |
 
 ° *in asreml-R version 3.0 it is not possible to extract the required estimated matrices*  <br />

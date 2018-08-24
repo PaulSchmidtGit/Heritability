@@ -27,5 +27,5 @@ BLUP~BLUE | X | °° | X |
 sumdiv | X | °° | X |
 Simulated | ° | X | X |
 
-° *in asreml-R version 3.0 it is not possible to extract the required estimated matrices*
+° *in asreml-R version 3.0 it is not possible to extract the required estimated matrices*  <br \>
 °° *not yet possible to obtain BLUEs in sommer package*

@@ -1,7 +1,7 @@
 # Heritability in Plant Breeding
-This GitHub respository contains `R` and `SAS` codes for the calculation of a number of measures for heritability on enty-mean basis. Its aim is to provide helpful examples for researchers and practicioners in the field of plant breeding or genereal cultivar evaluation trials.
+This GitHub respository contains `R` and `SAS` codes for the calculation of a number of methods for heritability on enty-mean basis. Its aim is to provide helpful examples for researchers and practicioners in the field of plant breeding or genereal cultivar evaluation trials.
 
-It is work in progress and will be updated regularly.
+It is work in progress and will be updated from time to time.
 
 #### Contact
 Please don't hesitate to contact me about any of this! <br />

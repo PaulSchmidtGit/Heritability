@@ -1,14 +1,14 @@
 /************************************************************************************************/
-/*				    _      _   _              _  _ __     ___ _          _         				*/
-/*				   /_\  __| | | |_  ___  __  | || |_ )___| _ (_)___ _ __| |_  ___  				*/
-/*				  / _ \/ _` | | ' \/ _ \/ _| | __ /__|___|  _/ / -_) '_ \ ' \/ _ \ 				*/
-/*				 /_/ \_\__,_| |_||_\___/\__| |_||_|      |_| |_\___| .__/_||_\___/ 				*/
-/*				                                                   |_|             				*/
+/*                              _  _ __   ___ _          _                                      */
+/*                             | || |_ ) | _ (_)___ _ __| |_  ___                               */
+/*                             | __ /__| |  _/ / -_) '_ \ ' \/ _ \                              */
+/*                             |_||_|    |_| |_\___| .__/_||_\___/                              */
+/*                                                 |_|                                          */
 /*																								*/
-/*	This macro computes the ad hoc measure of heritability based on the mean variance of a 		*/
+/*	This macro computes the entry-based heritability based on the mean variance of a 		    */
 /*	difference of two adjusted genotype means (i.e. genotypic BLUEs).							*/				
 /*																								*/
-/*	Example code can be found on my github.														*/
+/*	Example application code can be found on https://github.com/PaulSchmidtGit/Heritability     */
 /*																								*/
 /*	This method is based on																		*/
 /*		Piepho, H.-P., and J. Möhring. 2007. Computing heritability and selection response from */
@@ -19,7 +19,7 @@
 /*		The model that is used to analyze the data beforehand should have a genotype main 		*/
 /*		effect. This model should then be fitted in two versions: once with the genotype main  	*/
 /*		effect random to obtain its variance component and once with the genotype main effect   */
-/*		fixed to obtain pairwise differences between LS-means.					                */
+/*		fixed to obtain (the variance of) pairwise differences between LS-means.				*/
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
@@ -37,7 +37,7 @@
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 06 August 2018  																	*/
+/*	Version 27 August 2018  																	*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
@@ -78,7 +78,10 @@ DATA &OUTPUT.;
 			xm_avdBLUE_g ="Mean variance of a difference of two genotypic BLUEs";
 RUN;
 
-********** xm Dateien löschen;
+/* Delete temporary files */
+PROC DATASETS LIBRARY=work;
+   DELETE xm_cp xm_diffs;
+RUN;
 
 %MEND H2_piepho;
-;
+

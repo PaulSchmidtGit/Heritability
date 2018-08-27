@@ -1,4 +1,5 @@
 /* data from John and Williams, 1995, p.146 */
+/* variety trial laid out as an alpha design */
 data a;
 input
 rep   block     gen     y;

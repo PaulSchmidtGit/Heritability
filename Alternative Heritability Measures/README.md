@@ -6,7 +6,7 @@ There are several alternative estimation methods for (broad-sense) heritability 
 ### Based on 3 different mixed model functions
 * `asreml()` of the R-package [ASReml-R](https://www.vsni.co.uk/software/asreml-r/) Version 3.0
 * `mmer2()`  of the R-package [sommer](https://cran.r-project.org/web/packages/sommer/index.html)
-* `PROC MIXED` in SAS
+* `PROC MIXED` in [SAS](https://www.sas.com/en_us/home.html)
 
 ### Application
 **For both R packages** you will find example analyses that you can copy-paste into R and run immediately (given all required packages are installed).

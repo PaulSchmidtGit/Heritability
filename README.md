@@ -10,4 +10,5 @@ paul.schmidt@uni-hohenheim.de,
 [LinkedIn](https://www.linkedin.com/in/schmidtpaul1989/), 
 [ResearchGate](https://www.researchgate.net/profile/Paul_Schmidt17)
 
-![alt text](https://www.uni-hohenheim.de/fileadmin/uni_hohenheim/Intranet_MA/Hochschulkommunikation/Corporate-Design/Logo/Uni-Hohenheim-Logo-Blau-EN.jpg)
+<img src="https://www.uni-hohenheim.de/fileadmin/uni_hohenheim/Intranet_MA/Hochschulkommunikation/Corporate-Design/Logo/Uni-Hohenheim-Logo-Blau-EN.jpg" data-canonical-src="https://www.uni-hohenheim.de/fileadmin/uni_hohenheim/Intranet_MA/Hochschulkommunikation/Corporate-Design/Logo/Uni-Hohenheim-Logo-Blau-EN.jpg" height="150" />
+

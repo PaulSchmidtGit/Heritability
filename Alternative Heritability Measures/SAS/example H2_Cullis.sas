@@ -1,4 +1,15 @@
-/* data from John and Williams, 1995, p.146 */
+/* Data taken from:                                          */
+/* John, J. A., and E. R. Williams, 1995 Cyclic and Computer */
+/* Generated Designs. Chapman & Hall, London, p.146          */
+/* yield trial with oats laid out as an a-design.            */
+/*                                                           */
+/* The trial had 24 genotypes, three complete replications,  */
+/* and six incomplete blocks within each replication. The    */
+/* block size was four. The data were analyzed by a linear   */
+/* mixed model with effects for genotypes, replicates, and   */
+/* incomplete blocks. Blocks were modeled as independent     */
+/* random effects to recover interblock information          */
+
 data a;
 input
 rep   block     gen     y;
@@ -84,13 +95,13 @@ datalines;
 /* Macro %getC22g */
 filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 	proc http method="get" 
-	url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
 /* %H2_Cullis */
 filename _inbox "%sysfunc(getoption(work))/MACRO H2_Cullis.sas";
 	proc http method="get" 
-	url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACRO%20H2_Cullis.sas" out=_inbox;
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_Cullis.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
 ODS HTML CLOSE; *Turn html results viewer off;

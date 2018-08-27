@@ -80,7 +80,7 @@ RUN;
 
 /* Delete temporary files */
 PROC DATASETS LIBRARY=work;
-   DELETE xm_cp xm_diffs;
+   DELETE xm_cp xm_diffs xm_mean_var;
 RUN;
 
 %MEND H2_piepho;

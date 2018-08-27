@@ -1,3 +1,49 @@
+/************************************************************************************************/
+/*                             _  _ ___    ___     _ _ _                                        */
+/*                            | || |_  )  / __|  _| | (_)___                                    */
+/*                            | __ |/ /  | (_| || | | | (_-<                                    */
+/*                            |_||_/___|  \___\_,_|_|_|_/__/                                    */
+/*																								*/
+/*	This macro computes the entry-based heritability based on the mean variance of a 		    */
+/*	difference of two genotype BLUPs.                                 							*/				
+/*																								*/
+/*	Example application code can be found on https://github.com/PaulSchmidtGit/Heritability     */
+/*																								*/
+/*	This method is based on																		*/
+/*		Cullis, B. R., A. B. Smith, and N. E. Coombes. 2006. On the design of early generation  */
+/*      variety trials with correlated data. Journal of Agricultural, Biological, and           */
+/*      Environmental Statistics 11(4):381–393. 							                    */
+/*		[p. 385]																	            */
+/*																								*/
+/*	Requirements/Input:																			*/
+/*		The model that is used to analyze the data beforehand should have a random genotype     */
+/*      main in order to obtain its variance component and the variance of pairwise differences */
+/*      genotype BLUPs.                                                         				*/
+/*																								*/
+/*		SAS/STAT																				*/
+/*			Name of genetic effect																*/
+/*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/	
+/*			Dataset 'covparms'																	*/
+/*				COVPARMS= specifies the MIXED / GLIMMIX ODS output with variance components.	*/
+/*				It must be produced from a model where the genotypic effect is random.			*/
+/*			Dataset 'm_c22g'																	*/
+/*				This dataset should contain the estimated variance-covariance matrix of the     */
+/*              genotype BLUPs. Note that it is not straightforward to obtain this matrix in    */
+/*              SAS, as it needs to be extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  */
+/*              We do, however, provide another MACRO named "getC22g" that does exactly that.   */
+/*              It is also available on: https://github.com/PaulSchmidtGit/Heritability         */
+/*			Name for output file																*/
+/*				OUTPUT= specifies the name for the output dataset.								*/
+/*																								*/
+/*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
+/*	dataset names starting with "xm_" as some are used in this macro.							*/
+/*																								*/
+/*	Version 27 August 2018  																	*/
+/*																								*/
+/*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
+/*																								*/
+/************************************************************************************************/
+
 %MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, m_c22g=, OUTPUT=);
 
 	/* Extract genotypic variance component from COVPARM output and save it in macro variable "xm_gen_var" */
@@ -28,5 +74,10 @@
 				xm_gen_var	 ="Genotypic variance component"
 				xm_avdBLUP_g ="Average variance of a difference of two genotypic BLUPs";
 		RUN;
+
+	/* Delete temporary files */
+	PROC DATASETS LIBRARY=work;
+   		DELETE xm_1 xm_2;
+	RUN;
 
 %MEND H2_cullis;

@@ -1,4 +1,15 @@
-/* data from John and Williams, 1995, p.146 */
+/* Data taken from:                                          */
+/* John, J. A., and E. R. Williams, 1995 Cyclic and Computer */
+/* Generated Designs. Chapman & Hall, London, p.146          */
+/* yield trial with oats laid out as an a-design.            */
+/*                                                           */
+/* The trial had 24 genotypes, three complete replications,  */
+/* and six incomplete blocks within each replication. The    */
+/* block size was four. The data were analyzed by a linear   */
+/* mixed model with effects for genotypes, replicates, and   */
+/* incomplete blocks. Blocks were modeled as independent     */
+/* random effects to recover interblock information          */
+
 data a;
 input
 rep   block     gen     y;
@@ -80,19 +91,22 @@ datalines;
 /***************************************/
 /* include macros directly from github */
 /***************************************/
-%LET giturl = ;
 
 /* Macros %getC22g & %getGFD*/
 filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+	proc http method="get" 
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
 /* Macro %H2_Oakey */
 filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACRO%20H2_Oakey.sas" out=_inbox;
+	proc http method="get" 
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_Oakey.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
-ODS HTML CLOSE; *Turn html results viewer off;
+
+ods html close; *Turn html results viewer off;
+
 /*************/
 /* fit model */
 /*************/
@@ -109,13 +123,15 @@ run;
 /* H2 estimation */
 /*****************/
 %getC22g(ENTRY_NAME=gen, MMEQSOL=mmeqsol, EXCLUDE_ZEROS=TRUE); 
-%getGFD(ENTRY_NAME=gen,  G=G,             EXCLUDE_ZEROS=TRUE);
+%getGFD( ENTRY_NAME=gen,  G=G,            EXCLUDE_ZEROS=TRUE);
 %H2Oakey(m_C22g=m_C22g, m_D=m_D, OUTPUT=H2Oakey);
 
-ODS HTML; *Turn html results viewer on;
-TITLE "H2 'Oakey'"; 
-PROC PRINT DATA=H2oakey LABEL; 
-RUN;
+ods html; *Turn html results viewer on;
+
+/* Show results */
+title "H2 'Oakey'"; 
+proc print data=H2oakey label; 
+run;
 
 
 

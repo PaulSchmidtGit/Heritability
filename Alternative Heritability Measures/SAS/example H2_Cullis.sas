@@ -124,7 +124,9 @@ run;
 %getC22g(ENTRY_NAME=gen, MMEQSOL=Mmeqsol, EXCLUDE_ZEROS=TRUE); 
 %H2_cullis(ENTRY_NAME=gen, COVPARMS=Covparms, m_c22g=m_c22g, OUTPUT=H2Cullis);
 
-ODS HTML; *Turn html results viewer on;
+ods html; *Turn html results viewer on;
+
+/* Show results */
 TITLE "H2 'Cullis'"; 
 PROC PRINT DATA=H2Cullis LABEL; 
 RUN;

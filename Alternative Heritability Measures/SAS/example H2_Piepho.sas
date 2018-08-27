@@ -1,4 +1,15 @@
-/* data from John and Williams, 1995, p.146 */
+/* Data taken from:                                          */
+/* John, J. A., and E. R. Williams, 1995 Cyclic and Computer */
+/* Generated Designs. Chapman & Hall, London, p.146          */
+/* yield trial with oats laid out as an a-design.            */
+/*                                                           */
+/* The trial had 24 genotypes, three complete replications,  */
+/* and six incomplete blocks within each replication. The    */
+/* block size was four. The data were analyzed by a linear   */
+/* mixed model with effects for genotypes, replicates, and   */
+/* incomplete blocks. Blocks were modeled as independent     */
+/* random effects to recover interblock information          */
+
 data a;
 input
 rep   block     gen     y;

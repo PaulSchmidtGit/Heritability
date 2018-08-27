@@ -45,24 +45,24 @@
 %MACRO H2_BLUE_BLUP(ENTRY_NAME=, LSM_Mu=, SolutionR=, LSM_G=, OUTPUT=);
 
 /* Format genotype BLUE Table */
-DATA m_blues; SET &LSMEANS.;
+DATA xm_blues; SET &LSM_G.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUE;
 RUN;
 
 /* Format genotype BLUP Table */
-DATA m_blups; SET &SolutionR.;
+DATA xm_blups; SET &SolutionR.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUP;
 RUN;
 
 /* Merge genotype BLUEs and BLUPs into BLUE-BLUP table */
-PROC SORT DATA=m_blues; BY &ENTRY_NAME.; RUN;
-PROC SORT DATA=m_blups; BY &ENTRY_NAME.; RUN;
-DATA m_full;
-MERGE m_blues m_blups;
+PROC SORT DATA=xm_blues; BY &ENTRY_NAME.; RUN;
+PROC SORT DATA=xm_blups; BY &ENTRY_NAME.; RUN;
+DATA xm_full;
+MERGE xm_blues xm_blups;
 BY &ENTRY_NAME.; 
 RUN;
 
@@ -72,33 +72,33 @@ CALL SYMPUT("Mu_ran", Estimate);
 RUN;
 
 /* Expanding BLUE-BLUP table */
-DATA m_full; SET m_full;
+DATA xm_full; SET xm_full;
 scaledGBLUE=BLUE-&Mu_ran.;
 absBLUP=abs(BLUP);
 absscaledGBLUE=abs(scaledGBLUE);
 RUN;
 
 /* H2 Reg */
-PROC MIXED DATA=m_full; 
+PROC MIXED DATA=xm_full; 
 MODEL BLUP=scaledGBLUE /S NOINT;
-ODS OUTPUT SolutionF=m_reg;
+ODS OUTPUT SolutionF=xm_reg;
 RUN;
 
-DATA m_reg; SET m_reg;
+DATA xm_reg; SET xm_reg;
 KEEP h2_reg;
 h2_reg=Estimate;
 RUN;
 
 /* H2 SumDiv */
-PROC MEANS DATA=m_full SUM NOPRINT; VAR absBLUP;
-OUTPUT OUT=m_sumabsblup SUM=sum_absblup;
+PROC MEANS DATA=xm_full SUM NOPRINT; VAR absBLUP;
+OUTPUT OUT=xm_sumabsblup SUM=sum_absblup;
 RUN;
-PROC MEANS DATA=m_full SUM NOPRINT; VAR absscaledGBLUE;
-OUTPUT OUT=m_sumabsscaledGBLUE SUM=sum_absscaledGBLUE;
+PROC MEANS DATA=xm_full SUM NOPRINT; VAR absscaledGBLUE;
+OUTPUT OUT=xm_sumabsscaledGBLUE SUM=sum_absscaledGBLUE;
 RUN;
 
-DATA m_sum;
-MERGE m_sumabsblup m_sumabsscaledGBLUE;
+DATA xm_sum;
+MERGE xm_sumabsblup xm_sumabsscaledGBLUE;
 H2_sumdiv=(sum_absblup/sum_absscaledGBLUE);
 KEEP H2_sumdiv;
 RUN; 
@@ -106,7 +106,7 @@ RUN;
 /* Final formatting */
 DATA &OUTPUT.;
 RETAIN h2_reg H2_sumdiv;
-MERGE m_reg m_sum;
+MERGE xm_reg xm_sum;
 FORMAT _numeric_ 10.3;
 LABEL 	h2_reg="H² Reg"
 		h2_sum="H² Sumdiv";
@@ -114,8 +114,7 @@ RUN;
 
 /* Delete temporary files */
 PROC DATASETS LIBRARY=work;
-   DELETE xm_cp xm_diffs xm_mean_var;
+   DELETE xm_blues xm_blups xm_full xm_reg xm_sumabsblup xm_sumabsscaledGBLUE xm_sum;
 RUN;
-
 
 %MEND H2_BLUE_BLUP;

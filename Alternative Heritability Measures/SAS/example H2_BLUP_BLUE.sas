@@ -95,7 +95,7 @@ datalines;
 /* Macro %H2_BLUP_BLUE */
 filename _inbox "%sysfunc(getoption(work))/Macro H2_Piepho.sas";
 	proc http method="get" 
-	url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACRO%20H2_BLUP_BLUE.sas" out=_inbox;
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_BLUP_BLUE.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
 
@@ -132,6 +132,8 @@ run;
 %H2_BLUE_BLUP(ENTRY_NAME=gen, LSM_Mu=Mu, SolutionR=BLUPs, LSM_G=BLUEs, OUTPUT=H2blupblue);
 
 ods html; *Turn html results viewer on;
+
+/* Show results */
 title "H2 'BLUP BLUE'"; 
 proc print data=H2blupblue label; 
 run;

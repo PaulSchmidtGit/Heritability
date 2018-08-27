@@ -86,7 +86,7 @@ RUN;
 
 DATA xm_reg; SET xm_reg;
 KEEP h2_reg;
-h2_reg=Estimate;
+H2_reg=Estimate;
 RUN;
 
 /* H2 SumDiv */
@@ -105,10 +105,10 @@ RUN;
 
 /* Final formatting */
 DATA &OUTPUT.;
-RETAIN h2_reg H2_sumdiv;
+RETAIN H2_reg H2_SumDiv;
 MERGE xm_reg xm_sum;
 FORMAT _numeric_ 10.3;
-LABEL 	h2_reg="H² Reg"
+LABEL 	H2_reg="H² Reg"
 		H2_SumDiv="H² SumDiv";
 RUN;
 

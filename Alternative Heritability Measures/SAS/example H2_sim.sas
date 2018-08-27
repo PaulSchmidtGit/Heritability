@@ -1,4 +1,15 @@
-/* data from John and Williams, 1995, p.146 */
+/* Data taken from:                                          */
+/* John, J. A., and E. R. Williams, 1995 Cyclic and Computer */
+/* Generated Designs. Chapman & Hall, London, p.146          */
+/* yield trial with oats laid out as an a-design.            */
+/*                                                           */
+/* The trial had 24 genotypes, three complete replications,  */
+/* and six incomplete blocks within each replication. The    */
+/* block size was four. The data were analyzed by a linear   */
+/* mixed model with effects for genotypes, replicates, and   */
+/* incomplete blocks. Blocks were modeled as independent     */
+/* random effects to recover interblock information          */
+
 data a;
 input
 rep   block     gen     y;
@@ -83,10 +94,14 @@ datalines;
 
 /* Macros %getC22g, %getGFD, %getGamma & %H2_sim */
 filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+	proc http method="get" 
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
+
+/* Macro %H2RSim */
 filename _inbox "%sysfunc(getoption(work))/Macro H2_R_Simulated.sas";
-	proc http method="get" url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACRO%20H2_R_Simulated.sas" out=_inbox;
+	proc http method="get" 
+	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_R_Simulated.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
 ODS HTML CLOSE; *Turn html results viewer off;
@@ -110,10 +125,13 @@ run;
 %getGamma(m_C22=m_C22, m_G=m_G, m_F=m_F, m_D=m_D);
 %H2RSim(m_Gamma=m_gamma, n_sim=10000, H_OUT=H2_sim, R_OUT=R_sim);
 
-ODS HTML; *Turn html results viewer on;
+ods html; *Turn html results viewer on;
+
+/* Show results */
 TITLE "Ad hoc H2_sim"; 
 PROC PRINT DATA=H2_sim LABEL; 
 RUN;
+
 TITLE "Simulated Response to Selection"; 
 PROC PRINT DATA=R_sim LABEL; 
 RUN;

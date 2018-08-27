@@ -98,7 +98,7 @@ filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
 
-/* %H2_Cullis */
+/* Macro %H2_Cullis */
 filename _inbox "%sysfunc(getoption(work))/MACRO H2_Cullis.sas";
 	proc http method="get" 
 	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_Cullis.sas" out=_inbox;

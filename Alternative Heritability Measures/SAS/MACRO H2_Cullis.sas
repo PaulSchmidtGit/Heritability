@@ -17,8 +17,8 @@
 /*																								*/
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
-/*      main in order to obtain its variance component and the variance of pairwise differences */
-/*      genotype BLUPs.                                                         				*/
+/*      main effect in order to obtain its variance component and the variance of pairwise      */
+/*      differences between genotype BLUPs.                                                     */
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/

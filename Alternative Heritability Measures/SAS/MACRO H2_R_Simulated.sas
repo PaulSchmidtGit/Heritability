@@ -7,52 +7,37 @@
 /*	This macro computes (i) the measure of heritability as the simulated expected correlation  	*/
 /*	of predicted and true genotypic value and (ii) a simulated expected response to selection.  */
 /*																								*/
-/*	Example code can be found below at the end of this file.									*/
+/*	Example application code can be found on https://github.com/PaulSchmidtGit/Heritability     */
 /*																								*/
 /*	This method is based on																		*/
 /*		Piepho, H.-P., and J. Möhring. 2007. Computing heritability and selection response from */
 /*		unbalanced plant breeding trials. Genetics 177(3):1881–1888.							*/
 /*	Comments in the code refer to respective equations from this article [i.e. (1), (2) etc.]   */
 /*																								*/
-/*	This macro actually consists of 4 macros:													*/
-/*	   (i) %GET_C22   extracts the C22 matrix from ods output of SAS							*/
-/*	  (ii) %GET_GFD   extracts the G, F and D matrices from ods output of SAS					*/
-/*	 (iii) %GET_GAMMA calculates Gamma from C22, G, F and D				 						*/
-/*	  (iv) %GET_HRsim simulates H² and R based on Gamma											*/
-/*																								*/
 /*	Requirements/Input:																			*/
-/*		Preliminary fitted mixed model with random genotypic treatment factor					*/
-/*			A genotypic treatment factor should be defined as the >>>first<<< effect in the  	*/
-/*			RANDOM statement of PROC MIXED.														*/
-/*		SAS/STAT SAS/IML																		*/
-/*			Name of genetic effect 'ENTRY_NAME'													*/
-/*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/
-/*			Dataset 'MMEQSOL'																	*/
-/*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the mixed model			*/
-/*				equations solution. 															*/
-/*			Dataset 'GMATRIX'																	*/
-/*				G= specifies the MIXED / GLIMMIX ODS output with the estimated G matrix.		*/
+/*		The model that is used to analyze the data beforehand should have a random genotype     */
+/*      main in order to obtain the estimated variance-covariance matrices of (i) the random    */
+/*      (genotype) effects and (ii) the genotype BLUPs.                                         */
 /*																								*/
-/*	Output:																						*/
-/*		C22, G, F, D and Gamma matrices as datasets xm_c22, xm_g, xm_f, xm_d and xm_gamma		*/
-/*		Heritability estimate as xm_h2_gg														*/
-/*		Response to selection depending on the number of selected genotypes as xm_R      		*/
+/*		SAS/STAT SAS/IML																		*/
+/*			Dataset 'm_Gamma'													                */
+/*				This dataset should contain the Gamma matrix [see Eq. 13 in Piepho & Möhring    */
+/*			    (2007)]. It can by obtained via the another MACRO named "getGamma" from         */
+/*              https://github.com/PaulSchmidtGit/Heritability.                                 */
+/*          n_sim                                                                               */
+/*              This should be a numeric value defining the number of simulation runs.          */
+/*          H_OUT & R_OUT                                                                       */
+/*              specifiy the name for the output datasets.                                      */
+/*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	First version 11 October 2017																*/
+/*	Version 27 August 2018      																*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
 /************************************************************************************************/
 
-/************************************************************************************************
-  ___ _           _      _         _  _ __                _   ___ 
- / __(_)_ __ _  _| |__ _| |_ ___  | || |_ )  __ _ _ _  __| | | _ \
- \__ \ | '  \ || | / _` |  _/ -_) | __ /__| / _` | ' \/ _` | |   /
- |___/_|_|_|_\_,_|_\__,_|\__\___| |_||_|    \__,_|_||_\__,_| |_|_\
-                                                                  
-************************************************************************************************/
 %MACRO H2RSim(m_Gamma=, n_sim=, H_OUT=, R_OUT=);
 	PROC IML;
 		USE &m_Gamma.; READ ALL INTO gamma;
@@ -96,7 +81,7 @@
 		LABEL  H2_gg  ="H² as r² of (g-g^)"
 			 /*H2_gg_b="H² as r² of (g-g^) [alternative]"*/;
 		FORMAT H2_gg 
- 			 /*H2_gg_b*/ 8.2;
+ 			 /*H2_gg_b [alternative]*/ 8.2;
 		RUN;
 
 	DATA &R_OUT.;

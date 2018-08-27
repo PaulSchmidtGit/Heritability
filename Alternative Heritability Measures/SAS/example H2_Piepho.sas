@@ -84,7 +84,7 @@ datalines;
 /* Macro %H2_piepho */
 filename _inbox "%sysfunc(getoption(work))/Macro H2_Piepho.sas";
 proc http method="get" 
-url="https://raw.githubusercontent.com/SchmidtPaul/HeritabilityScripts/master/SAS/MACRO%20H2_Piepho.sas" out=_inbox;
+url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_Piepho.sas" out=_inbox;
 run; %Include _inbox; filename _inbox clear;
 
 ODS HTML CLOSE; *Turn html results viewer off;
@@ -98,12 +98,13 @@ proc mixed data=a;
 class rep block gen;
 model y = rep /ddfm=kr;
 random gen rep*block;
-ods output Covparms=Covparms;
+ods output Covparms=Covparms;        * obtain estimated variance components;
 run;
 
-DATA Covparms_no_gen; SET Covparms;
-IF Covparm = "gen" THEN DELETE;
-RUN;
+data Covparms_no_gen; 
+set  Covparms;
+if Covparm = "gen" then delete;
+run;
 
 /* Genotype as fixed effect */
 proc mixed data=a;
@@ -111,8 +112,8 @@ class rep block gen;
 model y = gen rep /ddfm=kr;
 random rep*block;
 lsmeans gen /pdiff;
-parms /pdata=Covparms_no_gen noiter; *fixed variance components estimated in model above for better comparability;
-ods output Diffs=Diffs;
+parms /pdata=Covparms_no_gen noiter; * fixed variance components estimated in model above for better comparability;
+ods output Diffs=Diffs;              * obtain pairwise differences table;
 run;
 
 /*****************/
@@ -120,8 +121,12 @@ run;
 /*****************/
 %H2_piepho(ENTRY_NAME=gen, COVPARMS=Covparms, DIFFS=Diffs, OUTPUT=H2_piepho);
 
-ODS HTML; *Turn html results viewer on;
-TITLE "Ad hoc H2 'Piepho'"; PROC PRINT DATA=H2_piepho LABEL; RUN;
+ods html; *Turn html results viewer on;
+
+/* Show results */
+title "Ad hoc H2 'Piepho'"; 
+proc print data=H2_piepho label; 
+run;
 
 
 

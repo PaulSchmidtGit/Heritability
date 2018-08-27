@@ -6,4 +6,5 @@ There are several alternative estimation methods for (broad-sense) heritability 
 ### General application
 For each method, you will find an example code with a small dataset and its analysis. You can simply copy-paste the example code into R and run it (given all required packages are installed). 
 
-![alt text](https://www.vsni.co.uk/content/uploads/2016/04/ASreml_logo_RGB_hires.jpg)
+<img src="https://www.vsni.co.uk/content/uploads/2016/04/ASreml_logo_RGB_hires.jpg" data-canonical-src="https://www.vsni.co.uk/content/uploads/2016/04/ASreml_logo_RGB_hires.jpg" height="200" />
+

@@ -100,18 +100,19 @@ filename _inbox "%sysfunc(getoption(work))/Macro H2_Piepho.sas";
 
 
 ODS HTML CLOSE; *Turn html results viewer off;
+
 /**************/
 /* fit models */
 /**************/
 data a;
 set a;
-Mu=1;
+Mu=1;                                   * Create a dummy column full of 1s. See model statement in proc mixed below;
 run;
 
 /* Genotype as random effect */
 proc mixed data=a;
 class Mu rep block gen;
-model y= Mu rep /S noint ddfm=kr;
+model y= Mu rep /S noint ddfm=kr;       * Use noint, but "Mu" as pseudo intercept in order to obtain an overall mean via the lsmeans statement;
 random gen rep*block /S;
 lsmeans Mu;
 ods output lsmeans=Mu SolutionR=BLUPs;

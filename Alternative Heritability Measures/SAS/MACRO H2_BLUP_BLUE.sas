@@ -99,8 +99,8 @@ RUN;
 
 DATA xm_sum;
 MERGE xm_sumabsblup xm_sumabsscaledGBLUE;
-H2_sumdiv=(sum_absblup/sum_absscaledGBLUE);
-KEEP H2_sumdiv;
+H2_SumDiv=(sum_absblup/sum_absscaledGBLUE);
+KEEP H2_SumDiv;
 RUN; 
 
 /* Final formatting */
@@ -109,7 +109,7 @@ RETAIN h2_reg H2_sumdiv;
 MERGE xm_reg xm_sum;
 FORMAT _numeric_ 10.3;
 LABEL 	h2_reg="H² Reg"
-		h2_sum="H² Sumdiv";
+		H2_SumDiv="H² SumDiv";
 RUN;
 
 /* Delete temporary files */

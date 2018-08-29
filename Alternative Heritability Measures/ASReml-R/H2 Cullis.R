@@ -10,7 +10,7 @@ dat <- john.alpha
 #############
 require(asreml)
 # Genotype as random effect
-g_ran <- asreml(fixed = yield ~       rep, 
+g.ran <- asreml(fixed = yield ~       rep, 
                 random=       ~ gen + rep:block, 
                 data=dat)
 
@@ -18,7 +18,7 @@ g_ran <- asreml(fixed = yield ~       rep,
 # Handle model estimates #
 ##########################
 # Genetic variance component
-gen_var <- summary(g_ran)$varcomp['gen!gen.var','component']
+gen_var <- summary(g.ran)$varcomp['gen!gen.var','component']
 gen_var #0.142902
 
 # Mean variance of a difference of two GBLUPs

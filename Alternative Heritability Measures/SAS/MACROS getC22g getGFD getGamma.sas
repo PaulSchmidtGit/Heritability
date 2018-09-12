@@ -75,49 +75,6 @@
 		SET &G.; 
 		RUN;
 
-	%IF EXCLUDE_ZEROS="TRUE" %THEN 
-		%DO;
-			/* Eliminate 0 rows and columns of matrix       */
-			/* in case at leas one VC was estimated to be 0 */
-			/************************************************/
-			DATA xm_temp;									/* Calculate sum of every row */
-				SET xm_Gx;
-			 	ARRAY n {*} _NUMERIC_;
-			 	sum=SUM(of n[*]);
-				RUN;
-			DATA xm_temp; 									/* Add running number N */			
-				RETAIN N sum;
-				SET xm_temp;
-				N=_N_;
-			RUN;
-			DATA xm_temp2;									/* Delete 0-rows */
-				DROP N sum;
-				SET xm_temp;
-				WHERE sum ne 0;
-			RUN;
-			DATA xm_temp3;									/* Obtain names of 0-columns */
-				KEEP N nr dropcols;
-				SET xm_temp;
-				WHERE sum=0;
-				nr=_N_;
-				dropcols=CATS("Col",N);
-			RUN;
-
-				/* DO loop only executed if 0-lines are present */
-				%LET check = %SYSFUNC(OPEN(work.xm_temp3,is));	
-				%IF %SYSFUNC(ATTRN(&check,NOBS))>0 %THEN %DO;
-					PROC SQL NOPRINT;						/* Save 0-column names into list */
-						SELECT strip(dropcols) INTO :droplist 
-						separated BY ' ' FROM xm_temp3;
-						QUIT;
-					DATA xm_Gx;								/* Delete 0-columns */
-					  	SET xm_temp2 (DROP=&droplist);
-						RUN;
-				%END;
-				%LET rc=%SYSFUNC(CLOSE(&check));
-
-	%END;
-
 	PROC IML;												/* Create G-, F- and D-Matrix */
 		USE xm_Gx; READ ALL INTO xm_G;
 		m_G  = xm_G;

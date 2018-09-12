@@ -17,7 +17,9 @@
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
 /*      main in order to obtain the estimated variance-covariance matrices of (i) the random    */
-/*      (genotype) effects and (ii) the genotype BLUPs.                                         */
+/*      (genotype) effects and (ii) the genotype BLUPs. Furthermore, the genotype main effect   */
+/*		must be the first random effect written in the model and there must not be variance     */
+/*      component estimates equal 0 for this macro to work.            							*/
 /*																								*/
 /*		SAS/STAT SAS/IML																		*/
 /*			Dataset 'm_Gamma'													                */

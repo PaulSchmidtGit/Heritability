@@ -88,15 +88,9 @@ datalines;
  3       6        7    3.6096
 ;
 
-/***************************************/
-/* include macros directly from github */
-/***************************************/
-
-/* Macro %getC22g */
-filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" 
-	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
-	run; %Include _inbox; filename _inbox clear;
+/**************************************/
+/* include macro directly from github */
+/**************************************/
 
 /* Macro %H2_Cullis */
 filename _inbox "%sysfunc(getoption(work))/MACRO H2_Cullis.sas";
@@ -121,8 +115,7 @@ run;
 /*****************/
 /* H2 estimation */
 /*****************/
-%getC22g(ENTRY_NAME=gen, MMEQSOL=Mmeqsol, EXCLUDE_ZEROS=TRUE); 
-%H2_cullis(ENTRY_NAME=gen, COVPARMS=Covparms, m_c22g=m_c22g, OUTPUT=H2Cullis);
+%H2_cullis(ENTRY_NAME=gen, COVPARMS=Covparms, MMEQSOL=Mmeqsol, OUTPUT=H2Cullis);
 
 ods html; *Turn html results viewer on;
 
@@ -130,8 +123,6 @@ ods html; *Turn html results viewer on;
 TITLE "H2 'Cullis'"; 
 PROC PRINT DATA=H2Cullis LABEL; 
 RUN;
-
-
 
 
 

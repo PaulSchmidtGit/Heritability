@@ -18,7 +18,8 @@
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
 /*      main effect in order to obtain its variance component and the variance of pairwise      */
-/*      differences between genotype BLUPs.                                                     */
+/*      differences between genotype BLUPs. Furthermore, the genotype main effect must be       */
+/*		the first random effect written in the model for this macro to work.                    */
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
@@ -44,7 +45,7 @@
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, m_c22g=, OUTPUT=);
+%MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, OUTPUT=);
 
 	/* Extract genotypic variance component from COVPARM output and save it in macro variable "xm_gen_var" */
 	DATA xm_cp; SET &COVPARMS.;
@@ -52,9 +53,16 @@
 		CALL SYMPUT("xm_gen_var", Estimate);
 		RUN;
 
+	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub */
+	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
+		proc http method="get" 
+		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+		run; %Include _inbox; filename _inbox clear;
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+
 	/* Obtain average variance of a difference between genotype BLUPs "xm_avdBLUP_g" and calculate H2_cullis */
 	PROC IML;
-		USE &m_c22g.; READ ALL INTO xm_c22g;
+		USE m_c22g; READ ALL INTO xm_c22g;
 		n_g          = nrow(xm_c22g);
 		xm_avdBLUP_g = 2/n_g*(trace(xm_c22g)-(sum(xm_c22g)-trace(xm_c22g))/(n_g-1));
 		H2_cullis    = 100*(1-xm_avdBLUP_g/(2*&xm_gen_var.));

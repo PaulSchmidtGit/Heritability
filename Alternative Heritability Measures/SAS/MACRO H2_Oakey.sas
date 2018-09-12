@@ -19,7 +19,8 @@
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
 /*      main in order to obtain the estimated variance-covariance matrices of (i) the random    */
-/*      genotype effects and (ii) the genotype BLUPs.                                           */
+/*      genotype effects and (ii) the genotype BLUPs. Furthermore, the genotype main effect     */
+/*		must be the first random effect written in the model for this macro to work.            */
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
@@ -48,11 +49,21 @@
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2Oakey(m_C22g=, m_D= ,OUTPUT=H2Oakey);
+%MACRO H2Oakey(ENTRY_NAME=, MMEQSOL=, G= ,OUTPUT= );
+
+	/* Run Macros directly from GitHub */
+	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
+		proc http method="get" 
+		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+		run; %Include _inbox; filename _inbox clear;
+	/* (i) Extract C22g Matrix "m_c22g" from MMEQSOL */
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+	/* (ii) Extract Gg Matrix "m_D" from G */
+	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
 
 	PROC IML;
-		USE &m_C22g.; READ ALL INTO C22g;
-		USE &m_D.;    READ ALL INTO D;
+		USE m_C22g; READ ALL INTO C22g;
+		USE m_D;    READ ALL INTO D;
 
 		n_g		 = nrow(D);						  /* number of genotypes */
 		inv_D	 = inv(D);						  /* inverse of D */

@@ -88,22 +88,14 @@ datalines;
  3       6        7    3.6096
 ;
 
-/***************************************/
-/* include macros directly from github */
-/***************************************/
-
-/* Macros %getC22g & %getGFD*/
-filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" 
-	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
-	run; %Include _inbox; filename _inbox clear;
-
+/**************************************/
+/* include macro directly from github */
+/**************************************/
 /* Macro %H2_Oakey */
 filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 	proc http method="get" 
 	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACRO%20H2_Oakey.sas" out=_inbox;
 	run; %Include _inbox; filename _inbox clear;
-
 
 ods html close; *Turn html results viewer off;
 
@@ -122,9 +114,7 @@ run;
 /*****************/
 /* H2 estimation */
 /*****************/
-%getC22g(ENTRY_NAME=gen, MMEQSOL=mmeqsol, EXCLUDE_ZEROS=TRUE); 
-%getGFD( ENTRY_NAME=gen,  G=G,            EXCLUDE_ZEROS=TRUE);
-%H2Oakey(m_C22g=m_C22g, m_D=m_D, OUTPUT=H2Oakey);
+%H2Oakey(ENTRY_NAME=gen, MMEQSOL=mmeqsol, G=G ,OUTPUT=H2oakey);
 
 ods html; *Turn html results viewer on;
 
@@ -132,8 +122,3 @@ ods html; *Turn html results viewer on;
 title "H2 'Oakey'"; 
 proc print data=H2oakey label; 
 run;
-
-
-
-
-

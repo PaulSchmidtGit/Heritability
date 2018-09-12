@@ -38,9 +38,22 @@
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2RSim(m_Gamma=, n_sim=, H_OUT=, R_OUT=);
+%MACRO H2RSim(ENTRY_NAME=, MMEQSOL=, G=, n_sim=, H_OUT=, R_OUT=);
+
+	/* Run Macros directly from GitHub */
+	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
+		proc http method="get" 
+		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
+		run; %Include _inbox; filename _inbox clear;
+	/* (i) Extract C22g Matrix "m_c22g" from MMEQSOL */
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+	/* (ii) Extract Matrices "m_D", "m_F" and "m_G" from G */
+	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
+	/* (iii) Use matrices from above to obatin Gamma */
+	%getGamma(m_C22=m_C22, m_G=m_G, m_F=m_F, m_D=m_D);
+
 	PROC IML;
-		USE &m_Gamma.; READ ALL INTO gamma;
+		USE m_Gamma; READ ALL INTO gamma;
 		n = nrow(gamma);				/* n = number of rows in gamma */
 		z = j(n,1,0);					/* z = vector with n rows, full of 0s */
 		r2=0; a=0; b=0; c=0;			/* Predefine r2[correlation g-g_hat], a[Cov g-g_hat], b[Var_g] and c[Var g_hat] as 0 */
@@ -79,7 +92,7 @@
 	DATA &H_OUT.; 
 		SET xm_H2_gg;
 		LABEL  H2_gg  ="H² as r² of (g-g^)"
-			 /*H2_gg_b="H² as r² of (g-g^) [alternative]"*/;
+			 /*H2_gg_b="H² as r² of (g-g^) [alternative]"*/ ;
 		FORMAT H2_gg 
  			 /*H2_gg_b [alternative]*/ 8.2;
 		RUN;

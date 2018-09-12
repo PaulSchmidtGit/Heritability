@@ -88,16 +88,9 @@ datalines;
  3       6        7    3.6096
 ;
 
-/***************************************/
-/* include macros directly from github */
-/***************************************/
-
-/* Macros %getC22g, %getGFD, %getGamma & %H2_sim */
-filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
-	proc http method="get" 
-	url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
-	run; %Include _inbox; filename _inbox clear;
-
+/**************************************/
+/* include macro directly from github */
+/**************************************/
 /* Macro %H2RSim */
 filename _inbox "%sysfunc(getoption(work))/Macro H2_R_Simulated.sas";
 	proc http method="get" 
@@ -120,10 +113,7 @@ run;
 /*********************/
 /* H2 & R estimation */
 /*********************/
-%getC22g(ENTRY_NAME=gen, MMEQSOL=mmeqsol, EXCLUDE_ZEROS=TRUE); 
-%getGFD(ENTRY_NAME=gen,  G=G,             EXCLUDE_ZEROS=TRUE);
-%getGamma(m_C22=m_C22, m_G=m_G, m_F=m_F, m_D=m_D);
-%H2RSim(m_Gamma=m_gamma, n_sim=10000, H_OUT=H2_sim, R_OUT=R_sim);
+%H2RSim(ENTRY_NAME=gen, MMEQSOL=mmeqsol, G=G, n_sim=10000, H_OUT=H2_sim, R_OUT=R_sim);
 
 ods html; *Turn html results viewer on;
 

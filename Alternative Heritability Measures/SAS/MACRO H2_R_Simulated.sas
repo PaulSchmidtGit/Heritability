@@ -49,7 +49,7 @@
 	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
 	/* (ii) Extract Matrices "m_D", "m_F" and "m_G" from G */
 	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
-	/* (iii) Use matrices from above to obatin Gamma */
+	/* (iii) Use matrices from above to obatin Gamma "m_Gamma" */
 	%getGamma(m_C22=m_C22, m_G=m_G, m_F=m_F, m_D=m_D);
 
 	PROC IML;
@@ -106,4 +106,12 @@
 				SEL_MEAN="Simulated R";
 		FORMAT	SEL_MEAN 8.3;
 		RUN;
+
+	/* Clean up: delete temporary file */
+	/***********************************/
+	PROC DATASETS LIBRARY=work;
+	   	DELETE xm_h2_gg xm_r;
+		RUN; QUIT;
+
 %MEND H2RSim;
+;

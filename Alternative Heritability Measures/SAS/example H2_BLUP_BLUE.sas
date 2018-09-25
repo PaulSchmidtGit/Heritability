@@ -106,16 +106,16 @@ ODS HTML CLOSE; *Turn html results viewer off;
 /**************/
 data a;
 set a;
-Mu=1;                                   * Create a dummy column full of 1s. See model statement in proc mixed below;
+Mu=1;                                   * Create a dummy column "Mu" full of 1s. See model statement in proc mixed below;
 run;
 
 /* Genotype as random effect */
 proc mixed data=a;
 class Mu rep block gen;
-model y= Mu rep /S noint ddfm=kr;       * Use noint, but "Mu" as pseudo intercept in order to obtain an overall mean via the lsmeans statement;
+model y= Mu rep /S noint ddfm=kr;       * Use noint, but "Mu" as pseudo intercept in order to ... ;
 random gen rep*block /S;
-lsmeans Mu;
-ods output lsmeans=Mu SolutionR=BLUPs;
+lsmeans Mu;								* ... obtain an overall mean via the lsmeans statement;
+ods output lsmeans=Mu SolutionR=BLUPs;  
 run;
 
 /* Genotype as fixed effect */

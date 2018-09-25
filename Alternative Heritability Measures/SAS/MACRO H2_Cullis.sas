@@ -65,7 +65,7 @@
 		USE m_c22g; READ ALL INTO xm_c22g;
 		n_g          = nrow(xm_c22g);
 		xm_avdBLUP_g = 2/n_g*(trace(xm_c22g)-(sum(xm_c22g)-trace(xm_c22g))/(n_g-1));
-		H2_cullis    = 100*(1-xm_avdBLUP_g/(2*&xm_gen_var.));
+		H2_cullis    = (1-xm_avdBLUP_g/(2*&xm_gen_var.));
 		CREATE xm_1 FROM xm_avdBLUP_g; APPEND FROM xm_avdBLUP_g;
 		CREATE xm_2 FROM H2_cullis; APPEND FROM H2_cullis;
 		QUIT; RUN;
@@ -76,7 +76,7 @@
 		RETAIN 	H2_Cullis xm_gen_var xm_avdBLUP_g;
 		MERGE xm_2(RENAME=(COL1=H2_Cullis)) xm_1(RENAME=(COL1=xm_avdBLUP_g));
 		xm_gen_var=&xm_gen_var.;
-		FORMAT 	H2_Cullis 8.2 
+		FORMAT 	H2_Cullis 
 				xm_gen_var xm_avdBLUP_g 10.3;
 		LABEL 	H2_Cullis	 ="H² Cullis"
 				xm_gen_var	 ="Genotypic variance component"

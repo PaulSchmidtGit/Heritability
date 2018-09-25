@@ -15,34 +15,41 @@
 /*		The model that is used to analyze the data beforehand should have a genotype main 		*/
 /*		effect. This model should then be fitted in two versions: once with the genotype main  	*/
 /*		effect random to obtain genotype BLUPs and once with the genotype main effect           */
-/*		fixed to obtain LS-means for the genotypes (i.e. genotype BLUEs).				        */
+/*		fixed to obtain LS-means for the genotypes (i.e. genotype BLUEs). Furthermore, the      */
+/*      model with the random genotype main effect should have a pseudo-intercept effect in     */
+/*      the model statement and the /noint option. See example code for this macro.             */
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
-/*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/	
-/*			Dataset 'SolutionF'																	*/
-/*				SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with the fixed-effects 		*/
-/*				solution vector	from a model where the genotype main effect is random.			*/
+/*				ENTRY_NAME=	specifies the genotypic main effect (e.g. var, entry, gen, g).	    */
+/*			Dataset 'LSM_Mu'																	*/
+/*				LSM_Mu= specifies the MIXED / GLIMMIX ODS output with the least squares mean	*/
+/*				for the intercept "Mu" from a model where the genotype main effect is random.	*/
 /*			Dataset 'SolutionR'																	*/
 /*				SOLUTIONR= specifies the MIXED / GLIMMIX ODS output with the random-effects 	*/
 /*				solution vector	from the same model as SOLUTIONF.								*/
-/*			Dataset 'LSMeans'																	*/
-/*				LSMEANS= specifies the MIXED / GLIMMIX ODS output with the least squares means  */
+/*			Dataset 'LSM_G'																	    */
+/*				LSM_G= specifies the MIXED / GLIMMIX ODS output with the least squares means    */
 /*				of the genotypes. It must be produced from a model where the genotypic effect 	*/
 /*				is fixed.																		*/
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
-/*	dataset names starting with "xm_" as some are used in this macro.							*/
+/*	dataset or variable names starting with "xm_" as some are used in this macro.				*/
 /*																								*/
-/*	First version 27 August 2018																*/
+/*	First version 25 September 2018																*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
 /************************************************************************************************/
 
 %MACRO H2_BLUE_BLUP(ENTRY_NAME=, LSM_Mu=, SolutionR=, LSM_G=, OUTPUT=);
+
+/* Save overall mean from in macro variable "xm_Mu_ran" */
+DATA &LSM_Mu.; SET &LSM_Mu.;
+CALL SYMPUT("xm_Mu_ran", Estimate);
+RUN;
 
 /* Format genotype BLUE Table */
 DATA xm_blues; SET &LSM_G.;
@@ -64,18 +71,9 @@ PROC SORT DATA=xm_blups; BY &ENTRY_NAME.; RUN;
 DATA xm_full;
 MERGE xm_blues xm_blups;
 BY &ENTRY_NAME.; 
-RUN;
-
-/* Save overall mean from in macro variable "Mu_ran" */
-DATA &LSM_Mu.; SET &LSM_Mu.;
-CALL SYMPUT("Mu_ran", Estimate);
-RUN;
-
-/* Expanding BLUE-BLUP table */
-DATA xm_full; SET xm_full;
-scaledGBLUE=BLUE-&Mu_ran.;
-absBLUP=abs(BLUP);
-absscaledGBLUE=abs(scaledGBLUE);
+scaledGBLUE    = BLUE-&xm_Mu_ran.;
+absBLUP        = abs(BLUP);
+absscaledGBLUE = abs(scaledGBLUE);
 RUN;
 
 /* H2 Reg */
@@ -90,16 +88,14 @@ H2_reg=Estimate;
 RUN;
 
 /* H2 SumDiv */
-PROC MEANS DATA=xm_full SUM NOPRINT; VAR absBLUP;
-OUTPUT OUT=xm_sumabsblup SUM=sum_absblup;
-RUN;
-PROC MEANS DATA=xm_full SUM NOPRINT; VAR absscaledGBLUE;
-OUTPUT OUT=xm_sumabsscaledGBLUE SUM=sum_absscaledGBLUE;
+PROC MEANS DATA=xm_full SUM NOPRINT; VAR absBLUP absscaledGBLUE;
+OUTPUT OUT=xm_sum;
 RUN;
 
-DATA xm_sum;
-MERGE xm_sumabsblup xm_sumabsscaledGBLUE;
-H2_SumDiv=(sum_absblup/sum_absscaledGBLUE);
+DATA xm_sum; 
+SET xm_sum; 
+WHERE _stat_='MEAN';
+H2_SumDiv=(absblup/absscaledGBLUE);
 KEEP H2_SumDiv;
 RUN; 
 
@@ -114,7 +110,7 @@ RUN;
 
 /* Delete temporary files */
 PROC DATASETS LIBRARY=work;
-   DELETE xm_blues xm_blups xm_full xm_reg xm_sumabsblup xm_sumabsscaledGBLUE xm_sum;
+   DELETE xm_blues xm_blups xm_full xm_reg xm_sum;
 RUN;
 
 %MEND H2_BLUE_BLUP;

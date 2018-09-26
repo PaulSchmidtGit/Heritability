@@ -25,25 +25,19 @@
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
 /*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/	
-/*			Dataset 'm_D'																	    */
+/*			Dataset 'G'																	        */
 /*				This dataset should contain the estimated variance-covariance matrix of the     */
-/*              random genotype effects. Note that it is not straightforward to obtain this     */
-/*              matrix in SAS, as it needs to be extracted from the G= MIXED / GLIMMIX ODS      */
-/*              output. We do, however, provide another MACRO named "getC22g" that does exactly */
-/*              that. It is also available on: https://github.com/PaulSchmidtGit/Heritability   */
-/*			Dataset 'm_c22g'																	*/
-/*				This dataset should contain the estimated variance-covariance matrix of the     */
-/*              genotype BLUPs. Note that it is not straightforward to obtain this matrix in    */
-/*              SAS, as it needs to be extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  */
-/*              We do, however, provide another MACRO named "getC22g" that does exactly that.   */
-/*              It is also available on: https://github.com/PaulSchmidtGit/Heritability         */
+/*              random effects, which can be obtained via the G= MIXED / GLIMMIX ODS output.    */
+/*			Dataset 'MMEQSOL'																	*/
+/*				This dataset should contain the mixed model equations solution, which can be	*/
+/*				extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  						*/
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 27 August 2018  																	*/
+/*	Version 26 September 2018  																	*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
@@ -56,8 +50,10 @@
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 		run; %Include _inbox; filename _inbox clear;
+
 	/* (i) Extract C22g Matrix "m_c22g" from MMEQSOL */
 	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+
 	/* (ii) Extract Gg Matrix "m_D" from G */
 	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
 
@@ -83,7 +79,7 @@
 
 	/* Delete temporary files */
 	PROC DATASETS LIBRARY=work;
-   		DELETE xm_H2Oak;
+   		DELETE xm_H2Oak m_D m_F m_G m_C22g m_C22;
 	RUN;
 
 %MEND H2Oakey;

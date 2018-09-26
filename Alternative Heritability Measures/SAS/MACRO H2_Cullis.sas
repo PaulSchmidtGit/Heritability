@@ -24,15 +24,11 @@
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
 /*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/	
-/*			Dataset 'covparms'																	*/
+/*			Dataset 'COVPARMS'																	*/
 /*				COVPARMS= specifies the MIXED / GLIMMIX ODS output with variance components.	*/
-/*				It must be produced from a model where the genotypic effect is random.			*/
-/*			Dataset 'm_c22g'																	*/
-/*				This dataset should contain the estimated variance-covariance matrix of the     */
-/*              genotype BLUPs. Note that it is not straightforward to obtain this matrix in    */
-/*              SAS, as it needs to be extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  */
-/*              We do, however, provide another MACRO named "getC22g" that does exactly that.   */
-/*              It is also available on: https://github.com/PaulSchmidtGit/Heritability         */
+/*			Dataset 'MMEQSOL'																	*/
+/*				This dataset should contain the mixed model equations solution, which can be	*/
+/*				extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  						*/
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
@@ -85,7 +81,7 @@
 
 	/* Delete temporary files */
 	PROC DATASETS LIBRARY=work;
-   		DELETE xm_1 xm_2;
+   		DELETE xm_1 xm_2 xm_cp;
 	RUN;
 
 %MEND H2_cullis;

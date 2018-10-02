@@ -15,7 +15,7 @@ There are several alternative estimation methods for (broad-sense) heritability 
 **For SAS** it works similarly, yet you will see that the example analyses make use of SAS `%MACROs`. These macros are also provided in the SAS folders. You do not need to copy-paste or download the macros in order to run the example analyses, since they are included automatically via their URL and a `proc http` command at the top of each code.
 
 ### Work in progress
-Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview here:
+Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview below. Further note that in some cases the solutions are ad hoc in the sense that they will only work for that specific model.
 
 H² Method | `asreml()` | `mmer2()` | `lmer()` | `PROC MIXED` | 
 :--- | :---: | :---: | :---: | :---: |

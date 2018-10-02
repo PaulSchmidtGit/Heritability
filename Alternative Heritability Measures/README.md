@@ -3,7 +3,7 @@ There are several alternative estimation methods for (broad-sense) heritability 
 
 > P. Schmidt, J. Möhring, J. Rath and H.-P. Piepho. 2018. Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials. Crop Science **forthcoming**
 
-### Based on 3 different mixed model functions
+### Based on 4 different mixed model functions
 * `asreml()` of the R-package [ASReml-R Version 3.0](https://www.vsni.co.uk/software/asreml-r/)
 * `mmer2()`  of the R-package [sommer](https://cran.r-project.org/web/packages/sommer/index.html)
 * `lmer()`   of the R-package [lme4](http://lme4.r-forge.r-project.org/)

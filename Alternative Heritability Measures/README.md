@@ -26,7 +26,7 @@ Cullis | X | X | X | X |
 Oakey | X | X |  | X |
 Reg | X | °° |  | X |
 SumDiv | X | °° |  | X |
-Simulated | ° | ° | ° | X |
+Simulated | ° | ° |  | X |
 
 ° *not possible to extract the full matrix of the mixed model equation solutions*  <br />
 °° *not possible to obtain e.g. emmeans based on BLUEs*

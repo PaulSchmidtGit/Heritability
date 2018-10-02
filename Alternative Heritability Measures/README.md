@@ -21,7 +21,7 @@ H² Method | `asreml()` | `mmer2()` | `lmer()` | `PROC MIXED` |
 :--- | :---: | :---: | :---: | :---: |
 Standard |  |  |  |  |
 Holland |  |  |  |  |
-Piepho | X | °° |  | X |
+Piepho | X | °° | X | X |
 Cullis | X | X | X | X |
 Oakey | X | X |  | X |
 Reg | X | °° |  | X |

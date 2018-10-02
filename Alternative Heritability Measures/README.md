@@ -26,7 +26,7 @@ Cullis | X | X | X | X |
 Oakey | X | X |  | X |
 Reg | X | °° |  | X |
 SumDiv | X | °° |  | X |
-Simulated | ° | X |  | X |
+Simulated | ° | ° | ° | X |
 
-° *in asreml-R version 3.0 it is not possible to extract the required estimated matrices*  <br />
-°° *not yet possible to obtain BLUEs in sommer package*
+° *not possible to extract the full matrix of the mixed model equation solutions*  <br />
+°° *not possible to obtain e.g. emmeans based on BLUEs*

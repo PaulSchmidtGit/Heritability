@@ -86,7 +86,7 @@ datalines;
  3       6        5    4.1972
  3       6       20    3.7349
  3       6        7    3.6096
-;
+;run;
 
 /**************************************/
 /* include macro directly from github */

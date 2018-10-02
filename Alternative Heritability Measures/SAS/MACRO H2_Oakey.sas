@@ -79,7 +79,7 @@
 
 	/* Delete temporary files */
 	PROC DATASETS LIBRARY=work;
-   		DELETE xm_H2Oak m_D m_F m_G m_C22g m_C22;
+   		DELETE xm_H2Oak;
 	RUN;
 
 %MEND H2Oakey;

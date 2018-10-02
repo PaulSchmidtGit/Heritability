@@ -43,18 +43,18 @@
 
 %MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, OUTPUT=);
 
-	/* Extract genotypic variance component from COVPARM output and save it in macro variable "xm_gen_var" */
-	DATA xm_cp; SET &COVPARMS.;
-		WHERE CovParm="&ENTRY_NAME.";
-		CALL SYMPUT("xm_gen_var", Estimate);
-		RUN;
-
 	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub */
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 		run; %Include _inbox; filename _inbox clear;
 	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+
+	/* Extract genotypic variance component from COVPARM output and save it in macro variable "xm_gen_var" */
+	DATA xm_cp; SET &COVPARMS.;
+		WHERE CovParm="&ENTRY_NAME.";
+		CALL SYMPUT("xm_gen_var", Estimate);
+		RUN;
 
 	/* Obtain average variance of a difference between genotype BLUPs "xm_avdBLUP_g" and calculate H2_cullis */
 	PROC IML;

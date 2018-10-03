@@ -22,10 +22,10 @@
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
 /*				ENTRY_NAME=	specifies the genotypic main effect (e.g. var, entry, gen, g).	    */
-/*			Dataset 'LSM_Mu'																	*/
-/*				LSM_Mu= specifies the MIXED / GLIMMIX ODS output with the least squares mean	*/
+/*			Dataset 'LSM_MU'																	*/
+/*				LSM_MU= specifies the MIXED / GLIMMIX ODS output with the least squares mean	*/
 /*				for the intercept "Mu" from a model where the genotype main effect is random.	*/
-/*			Dataset 'SolutionR'																	*/
+/*			Dataset 'SOLUTIONR'																	*/
 /*				SOLUTIONR= specifies the MIXED / GLIMMIX ODS output with the random-effects 	*/
 /*				solution vector	from the same model as SOLUTIONF.								*/
 /*			Dataset 'LSM_G'																	    */
@@ -52,14 +52,14 @@ CALL SYMPUT("xm_Mu_ran", Estimate);
 RUN;
 
 /* Format genotype BLUE Table */
-DATA xm_blues; SET &LSM_G.;
+DATA xm_blues;length effect $ 32; SET &LSM_G.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUE;
 RUN;
 
 /* Format genotype BLUP Table */
-DATA xm_blups; SET &SolutionR.;
+DATA xm_blups;length effect $ 32; SET &SolutionR.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUP;

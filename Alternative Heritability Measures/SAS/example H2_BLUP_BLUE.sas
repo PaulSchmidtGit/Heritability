@@ -86,7 +86,7 @@ datalines;
  3       6        5    4.1972
  3       6       20    3.7349
  3       6        7    3.6096
-;
+;RUN;
 
 /**************************************/
 /* include macro directly from github */
@@ -130,7 +130,7 @@ run;
 /*****************/
 /* H2 estimation */
 /*****************/
-%H2_BLUE_BLUP(ENTRY_NAME=gen, LSM_Mu=Mu, SolutionR=BLUPs, LSM_G=BLUEs, OUTPUT=H2blupblue);
+%H2_BLUE_BLUP(ENTRY_NAME=gen, LSM_MU=Mu, SOLUTIONR=BLUPs, LSM_G=BLUEs, OUTPUT=H2blupblue);
 
 ods html; *Turn html results viewer on;
 

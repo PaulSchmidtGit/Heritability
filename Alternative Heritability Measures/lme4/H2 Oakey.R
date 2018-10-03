@@ -49,10 +49,10 @@ C <- as.matrix(rbind(cbind(C11, C12),  # Combine components into one matrix C
 
 # Mixed Model Equation Solutions 
 C.inv <- solve(C)                                # Inverse of C
-PEV.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
+C22.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
 
 
-ED    <- diag(n.g)-(solve(G.g)%*%PEV.g)       # [see p. 813 bottom left in Oakey (2006)]
+ED    <- diag(n.g)-(solve(G.g)%*%C22.g)       # [see p. 813 bottom left in Oakey (2006)]
 eM    <- eigen(ED)                            # obtain eigenvalues
 
 ############
@@ -63,5 +63,5 @@ H2Oakey <- sum(eM$values)/(n.g-1)
 H2Oakey # 0.8091336
 
 # approximate method [see p. 813 top right in Oakey (2006)]
-H2Oakey.approx <- 1 - psych::tr( as.matrix(solve(G.g)%*%PEV.g / n.g ))
+H2Oakey.approx <- 1 - psych::tr( as.matrix(solve(G.g)%*%C22.g / n.g ))
 H2Oakey.approx # 0.7754197

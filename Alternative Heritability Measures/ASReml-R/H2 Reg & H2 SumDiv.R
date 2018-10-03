@@ -26,30 +26,30 @@ g.fix <- asreml(fixed = yield ~ -1 + Mu + gen + rep,
 # Handle model estimates #
 ##########################
 # gentoypic BLUEs
-GBLUEs <- predict(g.fix, classify="gen")$pred$pvals[,c('gen','predicted.value')]
+BLUEs <- predict(g.fix, classify="gen")$pred$pvals[,c('gen','predicted.value')]
 
 # gentoypic BLUPS
-GBLUPs <- predict(g.ran, classify="gen", only="gen")$pred$pvals[,c('gen','predicted.value')]
+BLUPs <- predict(g.ran, classify="gen", only="gen")$pred$pvals[,c('gen','predicted.value')]
 
 # Overall mean in g.ran
 Mu.ran <- predict(g.ran, classify="Mu")$pred$pvals$predicted.value
 Mu.ran #4.479517
 
 # Combine BLUPs and BLUEs, obtain scaled BLUEs
-Gpreds <- data.frame(gen   = GBLUEs[,1], 
-                     GBLUP = GBLUPs[,2], 
-                     GBLUE = GBLUEs[,2], 
-                     scaledGBLUE = GBLUEs[,2]-Mu.ran)
+Gpreds <- data.frame(gen  = BLUEs[,1], 
+                     BLUP = BLUPs[,2], 
+                     BLUE = BLUEs[,2], 
+                     scaled.BLUE = BLUEs[,2]-Mu.ran)
 
 ################
 # H2 BLUP~BLUE #
 ################
 H2reg <- lm(data    = Gpreds,
-            formula = GBLUP ~ 0 + scaledGBLUE)$coefficients
+            formula = BLUP ~ 0 + scaled.BLUE)$coefficients
 H2reg #0.8178116
 
 #############
 # H2 sumdiv #
 #############
-H2sumdiv <- sum(abs(Gpreds$GBLUP))/sum(abs(Gpreds$scaledGBLUE))
+H2sumdiv <- sum(abs(Gpreds$BLUP))/sum(abs(Gpreds$scaled.BLUE))
 H2sumdiv #0.8205183

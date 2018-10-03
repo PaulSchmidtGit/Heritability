@@ -51,11 +51,11 @@ C <- as.matrix(rbind(cbind(C11, C12),  # Combine components into one matrix C
 
 # Mixed Model Equation Solutions 
 C.inv <- solve(C)                                # Inverse of C
-PEV.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
-PEV   <- C.inv[-c(1:3), -c(1:3)]                 # subset of C.inv that refers to all BLUPS
+C22.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
+C22   <- C.inv[-c(1:3), -c(1:3)]                 # subset of C.inv that refers to all BLUPS
 
 # Gamma
-M       <- G - PEV
+M       <- G - C22
 inv.G   <- solve(G)
 Q       <- F %*% inv.G %*% M %*% inv.G %*% t(F)
 Omega   <- rbind(cbind(D,Q), cbind(Q,Q))

@@ -22,10 +22,10 @@ g.fix <- asreml(fixed = yield ~ gen + rep,
 # Handle model estimates #
 ##########################
 # Genetic variance component
-gen.var <- summary(g.ran)$varcomp['gen!gen.var','component']
-gen.var #0.142902
+vc.g <- summary(g.ran)$varcomp['gen!gen.var','component']
+vc.g #0.142902
 
-# Mean variance of a difference of two GBLUEs
+# Mean variance of a difference of two genotypic BLUEs
 vdBLUE.mat <- predict(g.fix, classify="gen", sed=TRUE)$pred$sed^2 # obtain squared s.e.d. matrix 
 vdBLUE.avg <- mean(vdBLUE.mat[upper.tri(vdBLUE.mat, diag=FALSE)]) # take mean of upper triangle
 vdBLUE.avg #0.07010875
@@ -33,7 +33,7 @@ vdBLUE.avg #0.07010875
 #############
 # H2 Piepho #
 #############
-H2.p <- gen.var/(gen.var + vdBLUE.avg/2)
+H2.p <- vc.g/(vc.g + vdBLUE.avg/2)
 H2.p #0.803017
 
 

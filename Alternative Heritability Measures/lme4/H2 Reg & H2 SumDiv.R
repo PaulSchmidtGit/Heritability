@@ -30,17 +30,17 @@ g.fix <- lmer(data    = dat,
 BLUPs <- as.data.table(ranef(g.ran)$gen, keep.rownames=T)
 names(BLUPs) <- c("gen", "BLUP")
 
-# Obtaining adjusted means based on genotypic BLUEs
+# Obtaining estimated marginal means based on genotypic BLUEs
 BLUEs <- as.data.table(emmeans(g.fix, pairwise ~ gen)$emmeans)[,c("gen", "emmean")] # get estimated marginal means for all genotype pairs
 
 # Overall mean in g.ran
 Mu.ran <- as.data.table(emmeans(g.ran, "Mu"))[,c("emmean")] # get estimated marginal overall mean for g.ran model
 
 # Combine BLUPs and emmeans, obtain scaled emmeans
-Gpreds <- data.table(BLUEs[order(gen), "gen"], 
-                     BLUPs[order(gen), "BLUP"],
-                     BLUEs[order(gen), "emmean"],
-                     scaled = BLUEs[order(gen), "emmean"] - as.numeric(Mu.ran))
+Gpreds <- data.frame(gen    = BLUEs[,1], 
+                     BLUP   = BLUPs[,2], 
+                     emmean = BLUEs[,2], 
+                     scaled.emmean = BLUEs[,2]-as.numeric(Mu.ran))
 
 ################
 # H2 BLUP~BLUE #

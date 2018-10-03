@@ -49,12 +49,12 @@ C <- as.matrix(rbind(cbind(C11, C12),  # Combine components into one matrix C
 
 # Mixed Model Equation Solutions 
 C.inv <- solve(C)                                # Inverse of C
-PEV.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
+C22.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
 
-# Mean variance of BLUP-difference from PEV matrix of genotypic BLUPs
+# Mean variance of BLUP-difference from C22 matrix of genotypic BLUPs
 one        <- t(t(rep(1, n.g)))                # vector of 1s
 P.mu       <- diag(n.g, n.g) - one %*% t(one)  # P.mu = matrix that centers for overall-mean
-vdBLUP.sum <- psych::tr(P.mu %*% PEV.g)        # sum of all variance of differences = trace of P.mu*PEV.g
+vdBLUP.sum <- psych::tr(P.mu %*% C22.g)        # sum of all variance of differences = trace of P.mu*C22.g
 vdBLUP.avg <- vdBLUP.sum * (2/(n.g*(n.g-1)))   # mean variance of BLUP-difference = divide sum by number of genotype pairs
 
 #############

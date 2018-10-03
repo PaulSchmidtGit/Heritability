@@ -21,7 +21,7 @@ vc.g     <- as.numeric(g.ran$var.comp[["gen"]]) # genetic variance component
 n.g      <- g.ran$dimos[["gen"]][2]             # number of genotypes
 C22.g    <- g.ran$PEV.u.hat[["gen"]][[1]]       #
 trC22.g  <- psych::tr(as.matrix(C22.g))         # trace
-vdBLUP.g <- 2/n.g*(trC22.g-(sum(C22.g)-trC22.g)/(n.g-1)) # Mean variance of a difference of two GBLUPs
+vdBLUP.g <- 2/n.g*(trC22.g-(sum(C22.g)-trC22.g)/(n.g-1)) # Mean variance of a difference of two genotypic BLUPs
 
 #############
 # H2 Cullis #

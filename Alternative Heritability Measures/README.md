@@ -15,18 +15,18 @@ There are several alternative estimation methods for (broad-sense) heritability 
 **For SAS** it works similarly, yet you will see that the example analyses make use of SAS `%MACROs`. These macros are also provided in the SAS folders. You do not need to copy-paste or download the macros in order to run the example analyses, since they are included automatically via their URL and a `proc http` command at the top of each code.
 
 ### Work in progress
-Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview below. Further note that in some cases the solutions are ad hoc in the sense that they will only work for that specific model.
+Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview below. Further note that in some cases, denoted by a lower case *x*, the presented codes are very much *ad hoc* in the sense that they will only work for that specific model and *e.g.* manually compute the mixed model equations solutions in order to obtain the desired results.
 
 H² Method | `asreml()` | `mmer2()` | `lmer()` | `PROC MIXED` | 
 :--- | :---: | :---: | :---: | :---: |
 Standard |  |  |  |  |
 Holland |  |  |  |  |
 Piepho | X | °° | X | X |
-Cullis | X | X | X | X |
+Cullis | X | X | x | X |
 Oakey | X | X | X | X |
 Reg | X | °° | X | X |
 SumDiv | X | °° | X | X |
-Simulated | ° | ° | X | X |
+Simulated | ° | ° | x | X |
 
-° *not possible to extract the full matrix of the mixed model equation solutions*  <br />
+° *not possible to extract the full matrix (C) of the mixed model equation solutions*  <br />
 °° *not possible to obtain e.g. emmeans based on BLUEs*

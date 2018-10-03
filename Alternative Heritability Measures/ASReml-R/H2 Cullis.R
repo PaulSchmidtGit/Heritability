@@ -8,11 +8,14 @@ dat <- john.alpha
 #############
 # Fit model #
 #############
-require(asreml)
+library(asreml)
 # Genotype as random effect
 g.ran <- asreml(fixed = yield ~       rep, 
                 random=       ~ gen + rep:block, 
                 data=dat)
+
+library(nadiv)
+
 
 ##########################
 # Handle model estimates #

@@ -8,7 +8,7 @@ dat <- john.alpha
 ##############
 # Fit models #
 ##############
-require(asreml)
+library(asreml)
 
 dat$Mu <- 1 #Create pseudo intercept to obtain estimate for Mu 
 

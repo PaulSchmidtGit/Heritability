@@ -46,7 +46,7 @@
 
 %MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, SOLUTIONF=, OUTPUT=);
 
-	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub */
+	/* Extract C22g Matrix "xm_c22g" from MMEQSOL via getC22g Macro from GitHub */
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;

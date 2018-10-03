@@ -8,7 +8,7 @@
 %MACRO getC22g(ENTRY_NAME=, MMEQSOL=, SOLUTIONF=, OUT_C22=xm_c22, OUT_C22g=xm_C22g);
 	/* Reduce ODS Output to numeric matrix */
 	/***************************************/
-	DATA xm_max;SET &SOLUTIONF;xm_n=_n_;keep xm_n;run;
+	DATA xm_max;SET &SOLUTIONF.;xm_n=_n_;keep xm_n;run;
 	PROC MEANS DATA=xm_max NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
 		VAR xm_n; OUTPUT max=xm_max OUT=xm_max;
 		RUN;
@@ -27,7 +27,7 @@
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
-	DATA &OUT_C22g; 											/* Drop most unwanted rows and columns of C */
+	DATA &OUT_C22g.; 											/* Drop most unwanted rows and columns of C */
 		SET &MMEQSOL.; 
 		if row<&min then delete;
 		if row>&max then delete;
@@ -37,7 +37,7 @@
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
-	DATA &OUT_C22; 											/* Drop most unwanted columns of C */
+	DATA &OUT_C22.; 											/* Drop most unwanted columns of C */
 		SET &MMEQSOL.; 
 		if row<&x. then delete;
 		KEEP col&x.-&colmax.; 

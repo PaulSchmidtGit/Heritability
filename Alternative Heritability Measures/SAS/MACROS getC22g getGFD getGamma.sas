@@ -5,7 +5,7 @@
  \__, \___|\__|  \___/___/___| \__,_|_||_\__,_|  \___/___/___\__, |
  |___/                                                       |___/ 
 ************************************************************************************************/
-%MACRO getC22g(ENTRY_NAME=, MMEQSOL=,SOLUTIONF=, OUT_C22=xm_c22, OUT_C22g=xm_C22g);
+%MACRO getC22g(ENTRY_NAME=, MMEQSOL=, SOLUTIONF=, OUT_C22=xm_c22, OUT_C22g=xm_C22g);
 	/* Reduce ODS Output to numeric matrix */
 	/***************************************/
 	DATA xm_max;SET &SOLUTIONF;xm_n=_n_;keep xm_n;run;

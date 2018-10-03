@@ -14,9 +14,6 @@ g.ran <- asreml(fixed = yield ~       rep,
                 random=       ~ gen + rep:block, 
                 data=dat)
 
-library(nadiv)
-
-
 ##########################
 # Handle model estimates #
 ##########################

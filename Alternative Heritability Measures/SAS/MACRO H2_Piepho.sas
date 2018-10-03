@@ -29,20 +29,20 @@
 /*				It must be produced from a model where the genotypic effect is random.			*/
 /*			Dataset 'diffs'																		*/
 /*				DIFFS= specifies the MIXED / GLIMMIX ODS output with pairwise comparisons of	*/
-/*				adjusted genotype means (BLUE). It must be produced from a model where the 		*/
-/*				genotypic effect is fixed.														*/
+/*				adjusted genotype means (BLUE), which requires the DIFFS/PDIFFS option in the   */
+/*              LSMEANS statement. It must be produced from a model where the genotypic effect  */
+/*              is fixed.														                */
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 27 August 2018  																	*/
+/*	Version 02 October 2018  																	*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
 /************************************************************************************************/
-;
 
 %MACRO H2_piepho(ENTRY_NAME=, COVPARMS=, DIFFS=, OUTPUT=);
 
@@ -84,4 +84,3 @@ PROC DATASETS LIBRARY=work;
 RUN;
 
 %MEND H2_piepho;
-

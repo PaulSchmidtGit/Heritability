@@ -86,7 +86,7 @@ datalines;
  3       6        5    4.1972
  3       6       20    3.7349
  3       6        7    3.6096
-;
+;RUN;
 
 /**************************************/
 /* include macro directly from github */
@@ -106,15 +106,15 @@ ods html close; *Turn html results viewer off;
 /* Genotype as random effect */
 proc mixed data=a mmeqsol;
 class rep block gen;
-model y= rep;
+model y= rep /S;
 random gen rep*block /G;
-ods output MMEqSol=mmeqsol G=G;
+ods output MMEQSOL=MmeqSol G=G SOLUTIONF=SolutionF;
 run;
 
 /*****************/
 /* H2 estimation */
 /*****************/
-%H2Oakey(ENTRY_NAME=gen, MMEQSOL=mmeqsol, G=G ,OUTPUT=H2oakey);
+%H2Oakey(ENTRY_NAME=gen, MMEQSOL=MmeqSol, G=G, SOLUTIONF=SolutionF, OUTPUT=H2oakey);
 
 ods html; *Turn html results viewer on;
 

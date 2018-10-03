@@ -31,6 +31,9 @@
 /*				G= specifies the MIXED / GLIMMIX ODS output with the estimated                  */
 /*				variance-covariance matrix of the random effects, which requires the G option   */
 /*				in the RANDOM statement.													    */
+/*          Dataset 'SOLUTIONF'                                                                 */
+/*              SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with fixed-effects solution */
+/*              vector, which requires the S option in the model statement.                     */
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/

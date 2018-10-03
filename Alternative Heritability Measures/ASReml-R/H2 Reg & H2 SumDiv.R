@@ -25,21 +25,21 @@ g.fix <- asreml(fixed = yield ~ -1 + Mu + gen + rep,
 ##########################
 # Handle model estimates #
 ##########################
-# GBLUEs
+# gentoypic BLUEs
 GBLUEs <- predict(g.fix, classify="gen")$pred$pvals[,c('gen','predicted.value')]
 
-# GBLUPS
+# gentoypic BLUPS
 GBLUPs <- predict(g.ran, classify="gen", only="gen")$pred$pvals[,c('gen','predicted.value')]
 
 # Overall mean in g.ran
-Mu_ran <- predict(g.ran, classify="Mu")$pred$pvals$predicted.value
-Mu_ran #4.479517
+Mu.ran <- predict(g.ran, classify="Mu")$pred$pvals$predicted.value
+Mu.ran #4.479517
 
 # Combine BLUPs and BLUEs, obtain scaled BLUEs
 Gpreds <- data.frame(gen   = GBLUEs[,1], 
                      GBLUP = GBLUPs[,2], 
                      GBLUE = GBLUEs[,2], 
-                     scaledGBLUE = GBLUEs[,2]-Mu_ran)
+                     scaledGBLUE = GBLUEs[,2]-Mu.ran)
 
 ################
 # H2 BLUP~BLUE #

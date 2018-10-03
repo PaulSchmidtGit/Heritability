@@ -17,7 +17,7 @@ There are several alternative estimation methods for (broad-sense) heritability 
 **IMPORTANT: Keep in mind that these are example codes which means that they do not necessarily apply to other models/settings. Their purpose is merely to exmplarily demonstrate and thus function as a starting point to be modified for other analyses.**
 
 ### Work in progress
-Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview below. Further note that in some cases, denoted by a lower case *x*, the presented codes are very much *ad hoc* in the sense that they will only work for that specific model and *e.g.* manually compute the mixed model equations solutions in order to obtain the desired results.
+Note that at the moment we do not provide code for all methods described in our paper and/or for all of the three mixed model functions. You can find an overview below. Further note that in some cases, denoted by a lower case *x*, the presented codes are **very much** *ad hoc* in the sense that they *e.g.* will definitely only work for that specific model and/or manually obtain variance-covariance matrices and the mixed model equations solutions in order to obtain the desired results.
 
 H² Method | `asreml()` | `mmer2()` | `lmer()` | `PROC MIXED` | 
 :--- | :---: | :---: | :---: | :---: |

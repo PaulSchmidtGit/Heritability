@@ -10,10 +10,10 @@
 /* incomplete blocks. Blocks were modeled as independent     */
 /* random effects to recover interblock information          */
 
-data a;
-input
+DATA a;
+INPUT
 rep   block     gen     y;
-datalines;
+DATALINES;
  1       1       11    4.1172
  1       1        4    4.4461
  1       1        5    5.8757
@@ -86,7 +86,7 @@ datalines;
  3       6        5    4.1972
  3       6       20    3.7349
  3       6        7    3.6096
-;run;
+;RUN;
 
 /**************************************/
 /* include macro directly from github */
@@ -105,17 +105,17 @@ ODS HTML CLOSE; *Turn html results viewer off;
 /*************/
 
 /* Genotype as random effect */
-proc mixed data=a mmeqsol;
-class rep block gen;
-model y = rep;
-random gen rep*block /G;
-ods output Covparms=Covparms MMEqSol=Mmeqsol;
-run;
+PROC MIXED DATA=a MMEQSOL;
+CLASS rep block gen;
+MODEL y = rep /S;
+RANDOM gen rep*block /G;
+ODS OUTPUT COVPARMS=Covparms MMEQSOL=MmeqSol SOLUTIONF=SolutionF;
+RUN;
 
 /*****************/
 /* H2 estimation */
 /*****************/
-%H2_cullis(ENTRY_NAME=gen, COVPARMS=Covparms, MMEQSOL=Mmeqsol, OUTPUT=H2Cullis);
+%H2_cullis(ENTRY_NAME=gen, COVPARMS=Covparms, MMEQSOL=Mmeqsol, SOLUTIONF=SolutionF, OUTPUT=H2Cullis);
 
 ods html; *Turn html results viewer on;
 

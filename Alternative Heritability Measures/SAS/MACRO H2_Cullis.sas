@@ -27,18 +27,18 @@
 /*				COVPARMS= specifies the MIXED / GLIMMIX ODS output with variance components.	*/
 /*			Dataset 'MMEQSOL'																	*/
 /*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the solutions of the 	*/
-/*				mixed model equations, which requires the MMEQSOL option.                       */
+/*				mixed model equations, which requires the MMEQSOL option in the PROC statement. */
 /*				PROC MIXED/GLIMMIX statement.													*/
 /*          Dataset 'SOLUTIONF'                                                                 */
 /*              SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with fixed-effects solution */
-/*              vector.                                                                         */
+/*              vector, which requires the S option in the model statement.                     */
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 27 August 2018  																	*/
+/*	Version 02 October 2018  																	*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
@@ -46,7 +46,7 @@
 
 %MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, SOLUTIONF=, OUTPUT=);
 
-	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub */
+	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub 
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;

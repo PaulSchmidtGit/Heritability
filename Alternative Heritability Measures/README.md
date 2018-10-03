@@ -23,9 +23,9 @@ Standard |  |  |  |  |
 Holland |  |  |  |  |
 Piepho | X | °° | X | X |
 Cullis | X | X | X | X |
-Oakey | X | X |  | X |
-Reg | X | °° |  | X |
-SumDiv | X | °° |  | X |
+Oakey | X | X | X | X |
+Reg | X | °° | X | X |
+SumDiv | X | °° | X | X |
 Simulated | ° | ° | X | X |
 
 ° *not possible to extract the full matrix of the mixed model equation solutions*  <br />

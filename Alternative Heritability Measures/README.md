@@ -23,7 +23,7 @@ Standard |  |  |  |  |
 Holland |  |  |  |  |
 Piepho | X | °° | X | X |
 Cullis | X | X | x | X |
-Oakey | X | X | X | X |
+Oakey | X | X | x | X |
 Reg | X | °° | X | X |
 SumDiv | X | °° | X | X |
 Simulated | ° | ° | x | X |

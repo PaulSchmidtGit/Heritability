@@ -86,7 +86,7 @@ datalines;
  3       6        5    4.1972
  3       6       20    3.7349
  3       6        7    3.6096
-;
+;RUN;
 
 /**************************************/
 /* include macro directly from github */
@@ -105,15 +105,15 @@ ODS HTML CLOSE; *Turn html results viewer off;
 /* Genotype as random effect */
 proc mixed data=a mmeqsol;
 class rep block gen;
-model y= rep;
+model y= rep /S;
 random gen rep*block /G;
-ods output MMEqSol=mmeqsol G=G;
+ods output MMEqSol=MmeqSol G=G SOLUTIONF=SolutionF;
 run;
 
 /*********************/
 /* H2 & R estimation */
 /*********************/
-%H2RSim(ENTRY_NAME=gen, MMEQSOL=mmeqsol, G=G, n_sim=10000, H_OUT=H2_sim, R_OUT=R_sim);
+%H2RSim(ENTRY_NAME=gen, MMEQSOL=MmeqSol, G=G, SOLUTIONF=SolutionF, n_sim=10000, H_OUT=H2_sim, R_OUT=R_sim);
 
 ods html; *Turn html results viewer on;
 

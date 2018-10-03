@@ -19,13 +19,21 @@
 /*      main in order to obtain the estimated variance-covariance matrices of (i) the random    */
 /*      (genotype) effects and (ii) the genotype BLUPs. Furthermore, the genotype main effect   */
 /*		must be the first random effect written in the model and there must not be variance     */
-/*      component estimates equal 0 for this macro to work.            							*/
+/*      Note the macro only works if all variance components are non-zero. In case a variance   */
+/*      component fixed to zero, you can drop the corresponding effect from the model and rerun */
+/*      rerun the analysis to produce the required input files.                                 */
 /*																								*/
 /*		SAS/STAT SAS/IML																		*/
-/*			Dataset 'm_Gamma'													                */
-/*				This dataset should contain the Gamma matrix [see Eq. 13 in Piepho & Möhring    */
-/*			    (2007)]. It can by obtained via the another MACRO named "getGamma" from         */
-/*              https://github.com/PaulSchmidtGit/Heritability.                                 */
+/*			Dataset 'MMEQSOL'																	*/
+/*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the solutions of the 	*/
+/*				mixed model equations, which requires the MMEQSOL option in the PROC statement. */
+/*			Dataset 'G'																	        */
+/*				G= specifies the MIXED / GLIMMIX ODS output with the estimated                  */
+/*				variance-covariance matrix of the random effects, which requires the G option   */
+/*				in the RANDOM statement.													    */
+/*          Dataset 'SOLUTIONF'                                                                 */
+/*              SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with fixed-effects solution */
+/*              vector, which requires the S option in the model statement.                     */
 /*          n_sim                                                                               */
 /*              This should be a numeric value defining the number of simulation runs.          */
 /*          H_OUT & R_OUT                                                                       */
@@ -34,25 +42,28 @@
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 27 August 2018      																*/
+/*	Version 02 October 2018      																*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2RSim(ENTRY_NAME=, MMEQSOL=, G=, n_sim=, H_OUT=, R_OUT=);
+%MACRO H2RSim(ENTRY_NAME=, MMEQSOL=, G=, SOLUTIONF=, n_sim=, H_OUT=, R_OUT=);
 
 	/* Run Macros directly from GitHub */
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 		run; %Include _inbox; filename _inbox clear;
+	
 	/* (i) Extract C22g Matrix "m_c22g" from MMEQSOL */
-	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL., SOLUTIONF=&SOLUTIONF.);
+	
 	/* (ii) Extract Matrices "m_D", "m_F" and "m_G" from G */
-	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
+	%getGFD(ENTRY_NAME=&ENTRY_NAME., G=&G.);
+	
 	/* (iii) Use matrices from above to obatin Gamma "m_Gamma" */
-	%getGamma(m_C22=m_C22, m_G=m_G, m_F=m_F, m_D=m_D);
+	%getGamma(m_C22=xm_C22, m_G=m_G, m_F=m_F, m_D=m_D);
 
 	PROC IML;
 		USE m_Gamma; READ ALL INTO gamma;
@@ -116,4 +127,3 @@
 		RUN; QUIT;
 
 %MEND H2RSim;
-;

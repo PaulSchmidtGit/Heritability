@@ -44,7 +44,7 @@
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2_BLUE_BLUP(ENTRY_NAME=, LSM_Mu=, SolutionR=, LSM_G=, OUTPUT=);
+%MACRO H2_BLUE_BLUP(ENTRY_NAME=, LSM_MU=, SOLUTIONR=, LSM_G=, OUTPUT=);
 
 /* Save overall mean from in macro variable "xm_Mu_ran" */
 DATA &LSM_Mu.; SET &LSM_Mu.;
@@ -52,14 +52,18 @@ CALL SYMPUT("xm_Mu_ran", Estimate);
 RUN;
 
 /* Format genotype BLUE Table */
-DATA xm_blues;length effect $ 32; SET &LSM_G.;
+DATA xm_blues;
+LENGTH Effect $ 32; 
+SET &LSM_G.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUE;
 RUN;
 
 /* Format genotype BLUP Table */
-DATA xm_blups;length effect $ 32; SET &SolutionR.;
+DATA xm_blups;
+LENGTH Effect $ 32; 
+SET &SolutionR.;
 WHERE Effect="&ENTRY_NAME.";
 KEEP Effect &ENTRY_NAME. Estimate;
 RENAME Estimate=BLUP;

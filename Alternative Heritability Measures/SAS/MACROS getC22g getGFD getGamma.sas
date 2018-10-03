@@ -8,30 +8,44 @@
 %MACRO getC22g(ENTRY_NAME=, MMEQSOL=, SOLUTIONF=, OUT_C22=xm_c22, OUT_C22g=xm_C22g);
 	/* Reduce ODS Output to numeric matrix */
 	/***************************************/
-	DATA xm_max;SET &SOLUTIONF.;xm_n=_n_;keep xm_n;run;
-	PROC MEANS DATA=xm_max NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
-		VAR xm_n; OUTPUT max=xm_max OUT=xm_max;
+
+	/* Obtain starting row/column of C22 with respect to C */
+	DATA xm_max;												
+		SET &SOLUTIONF.;
+		xm_n=_n_;
+		KEEP xm_n;
 		RUN;
-	DATA xm_max;set xm_max;
+	PROC MEANS DATA=xm_max NOPRINT;						
+		VAR xm_n; 
+		OUTPUT max=xm_max OUT=xm_max;
+		RUN;
+	DATA xm_max;
+		SET xm_max;
 		CALL SYMPUT ("X",xm_max);
 		RUN;
-		%let x=%sysevalf(&x+1);
-	PROC MEANS DATA=&MMEQSOL. NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
-		WHERE Effect="&ENTRY_NAME."; 
-		VAR row; OUTPUT OUT=xm_temp;
+	%LET x=%SYSEVALF(&x+1);										
+
+	/* C22.g */
+	PROC MEANS DATA=&MMEQSOL. NOPRINT;							
+		WHERE Effect="&ENTRY_NAME."; 	
+		VAR row; 
+		OUTPUT OUT=xm_temp;
 		RUN;
-	PROC MEANS DATA=&MMEQSOL. NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
-		VAR row; OUTPUT OUT=xm_temp2;
-		RUN;
-	DATA xm_temp; SET xm_temp;								/* Create variables &min., &max., &colmax. and &colmin. */			
+	DATA xm_temp; SET xm_temp;									/* Create variables &min., &max., &colmax. and &colmin. */			
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
 	DATA &OUT_C22g.; 											/* Drop most unwanted rows and columns of C */
 		SET &MMEQSOL.; 
-		if row<&min then delete;
-		if row>&max then delete;
-		KEEP &colmin.-&colmax; 
+		if row<&min. then delete;
+		if row>&max. then delete;
+		KEEP &colmin.-&colmax.; 
+		RUN;
+
+	/* C22 */
+	PROC MEANS DATA=&MMEQSOL. NOPRINT;							
+		VAR row; 
+		OUTPUT OUT=xm_temp2;
 		RUN;
 	DATA xm_temp2; SET xm_temp2;								/* Create variables &min., &max., &colmax. and &colmin. for MMEQSOL */			
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
@@ -42,6 +56,7 @@
 		if row<&x. then delete;
 		KEEP col&x.-&colmax.; 
 		RUN;
+
 	PROC DATASETS LIBRARY=work;								
    		DELETE xm_temp xm_temp2 xm_max ;
 		RUN; QUIT;
@@ -55,44 +70,54 @@
  |___/               |/                               
 ************************************************************************************************/
 %MACRO getGFD (ENTRY_NAME=, G=, OUT_m_g=m_g, OUT_m_f=m_f, OUT_m_d=m_d);
-	PROC MEANS DATA=&G. NOPRINT;						/* Obtain dimensions of D (=part of G referring to entry main effect) */
-		VAR row; OUTPUT OUT=xm_temp;
+	/* Obtain and save dimensions of G in variables &min., &max., &comax. and &colmin. */
+	PROC MEANS DATA=&G. NOPRINT;							
+		VAR row; 
+		OUTPUT OUT=xm_temp;
 		RUN;
-	DATA xm_temp; SET xm_temp;								/* Save dimensions in variables &min., &max. and &colmin. */			
+	DATA xm_temp; SET xm_temp;											
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
-	DATA m_G; 											/* Reduce ODS output G to purely numeric G-matrix */
+
+	/* Reduce ODS output to numeric matrix G */
+	DATA m_G; 											
 		SET &G.;
 		KEEP &colmin.-&colmax.; 
 		RUN;
-	DATA m_f; 											/* Reduce ODS output G to purely numeric G-matrix */
+
+	DATA m_f; 											
 		SET &G.;
 		row=_n_;
 		KEEP &colmin.-&colmax.; 
 		RUN;
-	PROC MEANS DATA=&G. NOPRINT;						/* Obtain dimensions of D (=part of G referring to entry main effect) */
+
+	/* Obtain and save dimensions of D (i.e. part of G referring to entry main effect, also referred to as G.g) in variables &min., &max., &comax. and &colmin. */
+	PROC MEANS DATA=&G. NOPRINT;						
 		WHERE Effect="&ENTRY_NAME."; 
 		VAR row; OUTPUT OUT=xm_temp;
 		RUN;
-	DATA xm_temp; SET xm_temp;								/* Save dimensions in variables &min., &max. and &colmin. */			
+	DATA xm_temp; SET xm_temp;							/* Save dimensions in variables &min., &max. and &colmin. */			
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
-	DATA m_f; 											/* Reduce ODS output G to purely numeric G-matrix */
+
+	DATA m_f; 											
 		SET m_f;
 		row=_n_;
-		if row<&min then delete; 
-		if row>&max then delete; 
+		IF row<&min. THEN DELETE; 
+		IF row>&max. THEN DELETE; 
 		DROP row;
 		RUN;
-	DATA m_d; 											/* Reduce ODS output G to purely numeric G-matrix */
+
+	DATA m_d; 											
 		SET &G.;
 		row=_n_;
-		if row<&min then delete; 
-		if row>&max then delete; 
+		IF row<&min. THEN DELETE; 
+		IF row>&max. THEN DELETE; 
 		KEEP &colmin.-&colmax.; 
 		RUN;
+
 %MEND getGFD;
 
 /************************************************************************************************
@@ -104,12 +129,12 @@
 ************************************************************************************************/
 %MACRO getGamma(m_C22=xm_C22, m_G=m_g, m_F=m_f, m_D= m_d);
 	PROC IML;
-		USE &m_C22; READ ALL INTO C22;
-		USE &m_G;   READ ALL INTO G;
-		USE &m_F;   READ ALL INTO F;
-		USE &m_D;   READ ALL INTO D;
+		USE &m_C22.; READ ALL INTO C22;
+		USE &m_G.;   READ ALL INTO G;
+		USE &m_F.;   READ ALL INTO F;
+		USE &m_D.;   READ ALL INTO D;
 
-		M		 = G-C22; 					/* (12) Still unclear why, but definitely true. See Mclean, Sanders, Stroup (1991) */
+		M		 = G-C22; 					/* (12) See Mclean, Sanders, Stroup (1991)      */
 		inv_G	 = inv(G);					/* Inverse of G 								*/
 		Q		 = F*inv_G*M*inv_G*t(F);	/* (10) Q = F G^-1 M G^-1 F' 					*/
 		omega	 = (D||Q)//(Q||Q);  		/* (10) Create Omega 							*/
@@ -117,5 +142,5 @@
 		m_gamma = u*DIAG(SQRT(lambda)); 	/* (13) Cholesky Decompostion of omega part II 	*/
 
 		CREATE m_gamma FROM m_gamma; APPEND FROM m_gamma;
-		QUIT; RUN;
+	QUIT; RUN;
 %MEND getGamma;

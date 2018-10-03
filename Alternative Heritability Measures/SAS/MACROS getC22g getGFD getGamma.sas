@@ -6,50 +6,47 @@
  |___/                                                       |___/ 
 ************************************************************************************************/
 
-%MACRO getC22g(ENTRY_NAME=, MMEQSOL=); 	                    /* Genotype main effect must be first random effect in model */
+%MACRO getC22g(ENTRY_NAME=, MMEQSOL=,SOLUTIONF=, OUT_C22=xm_c22, OUT_C22g=xm_C22g);
 	/* Reduce ODS Output to numeric matrix */
 	/***************************************/
+	DATA xm_max;SET &SOLUTIONF;xm_n=_n_;keep xm_n;run;
+	PROC MEANS DATA=xm_max NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
+		VAR xm_n; OUTPUT max=xm_max OUT=xm_max;
+		RUN;
+	DATA xm_max;set xm_max;
+		CALL SYMPUT ("X",xm_max);
+		RUN;
+		%let x=%sysevalf(&x+1);
 	PROC MEANS DATA=&MMEQSOL. NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
 		WHERE Effect="&ENTRY_NAME."; 
 		VAR row; OUTPUT OUT=xm_temp;
 		RUN;
-	DATA xm_temp; SET xm_temp;								/* Save variables &min. and &colmin. */			
+	PROC MEANS DATA=&MMEQSOL. NOPRINT;						/* Obtain starting row/column of C22 with respect to C */
+		VAR row; OUTPUT OUT=xm_temp2;
+		RUN;
+	DATA xm_temp; SET xm_temp;								/* Create variables &min., &max., &colmax. and &colmin. */			
 		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
 		CALL SYMPUT(           _STAT_ ,           Row);
 		RUN; 
-	DATA xm_temp; 											/* Drop most unwanted columns of C */
-		KEEP &colmin.-Col999999999; 
+	DATA &OUT_C22g; 											/* Drop most unwanted rows and columns of C */
 		SET &MMEQSOL.; 
+		if row<&min then delete;
+		if row>&max then delete;
+		KEEP &colmin.-&colmax; 
 		RUN;
-	PROC IML;
-		USE xm_temp; READ ALL INTO xm_C22;						/* Drop all unwanted colums and rows of C to obtain C22 */
-		m_C22 = xm_C22[&min.:nrow(xm_C22), 1:ncol(xm_C22)-1];		
-		CREATE m_C22 FROM m_C22; APPEND FROM m_C22;
-		QUIT; RUN;
-
-	/* C22 is obtained. Now C22g */
-	/*****************************/
-	PROC MEANS DATA=&MMEQSOL. NOPRINT;
-		WHERE Effect="&ENTRY_NAME."; 
-		VAR row;
-		OUTPUT OUT=xm_dim(DROP= _FREQ_ _TYPE_);
+	DATA xm_temp2; SET xm_temp2;								/* Create variables &min., &max., &colmax. and &colmin. for MMEQSOL */			
+		CALL SYMPUT(CATS("Col",_STAT_),CATS("Col",Row));
+		CALL SYMPUT(           _STAT_ ,           Row);
+		RUN; 
+	DATA &OUT_C22; 											/* Drop most unwanted columns of C */
+		SET &MMEQSOL.; 
+		if row<&x. then delete;
+		KEEP col&x.-&colmax.; 
 		RUN;
-	DATA xm_dim; SET xm_dim;
-		CALL SYMPUT(_STAT_,Row);
-		RUN;
-	PROC IML;
-		USE m_C22; READ ALL INTO xm_C22;
-		m_C22g			= xm_C22[1:&N.,1:&N.]; 
-		CREATE m_C22g FROM m_C22g; APPEND FROM m_C22g; 
-		QUIT; RUN;
-
-	/* Clean up: delete temporary file */
-	/***********************************/
 	PROC DATASETS LIBRARY=work;								
-   		DELETE xm_temp xm_temp2 xm_temp3 xm_dim;
+   		DELETE xm_temp xm_temp2 xm_max ;
 		RUN; QUIT;
-
-%MEND getC22g;
+%Mend getc22g;
 
 /************************************************************************************************
            _      ___     ___                _   ___  

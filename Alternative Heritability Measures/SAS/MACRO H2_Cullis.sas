@@ -18,8 +18,7 @@
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
 /*      main effect in order to obtain its variance component and the variance of pairwise      */
-/*      differences between genotype BLUPs. Furthermore, the genotype main effect must be       */
-/*		the first random effect written in the model for this macro to work.                    */
+/*      differences between genotype BLUPs.                                                     */
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
@@ -27,8 +26,12 @@
 /*			Dataset 'COVPARMS'																	*/
 /*				COVPARMS= specifies the MIXED / GLIMMIX ODS output with variance components.	*/
 /*			Dataset 'MMEQSOL'																	*/
-/*				This dataset should contain the mixed model equations solution, which can be	*/
-/*				extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  						*/
+/*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the solutions of the 	*/
+/*				mixed model equations, which requires the MMEQSOL option.                       */
+/*				PROC MIXED/GLIMMIX statement.													*/
+/*          Dataset 'SOLUTIONF'                                                                 */
+/*              SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with fixed-effects solution */
+/*              vector.                                                                         */
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
@@ -41,14 +44,15 @@
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, OUTPUT=);
+%MACRO H2_cullis(ENTRY_NAME=, COVPARMS=, MMEQSOL=, SOLUTIONF=, OUTPUT=);
 
 	/* Extract C22g Matrix "m_c22g" from MMEQSOL via getC22g Macro from GitHub */
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
 		proc http method="get" 
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
-		run; %Include _inbox; filename _inbox clear;
-	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
+		run; %Include _inbox; filename _inbox clear;*/
+
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.,SOLUTIONF=&SOLUTIONF);
 
 	/* Extract genotypic variance component from COVPARM output and save it in macro variable "xm_gen_var" */
 	DATA xm_cp; SET &COVPARMS.;
@@ -58,9 +62,9 @@
 
 	/* Obtain average variance of a difference between genotype BLUPs "xm_avdBLUP_g" and calculate H2_cullis */
 	PROC IML;
-		USE m_c22g; READ ALL INTO xm_c22g;
-		n_g          = nrow(xm_c22g);
-		xm_avdBLUP_g = 2/n_g*(trace(xm_c22g)-(sum(xm_c22g)-trace(xm_c22g))/(n_g-1));
+		USE xm_c22g; READ ALL INTO c22g;
+		n_g          = nrow(c22g);
+		xm_avdBLUP_g = 2/n_g*(trace(c22g)-(sum(c22g)-trace(c22g))/(n_g-1));
 		H2_cullis    = (1-xm_avdBLUP_g/(2*&xm_gen_var.));
 		CREATE xm_1 FROM xm_avdBLUP_g; APPEND FROM xm_avdBLUP_g;
 		CREATE xm_2 FROM H2_cullis; APPEND FROM H2_cullis;
@@ -74,7 +78,7 @@
 		xm_gen_var=&xm_gen_var.;
 		FORMAT 	H2_Cullis 
 				xm_gen_var xm_avdBLUP_g 10.3;
-		LABEL 	H2_Cullis	 ="H² Cullis"
+		LABEL 	H2_Cullis	 ="H2 Cullis"
 				xm_gen_var	 ="Genotypic variance component"
 				xm_avdBLUP_g ="Average variance of a difference of two genotypic BLUPs";
 		RUN;
@@ -82,6 +86,6 @@
 	/* Delete temporary files */
 	PROC DATASETS LIBRARY=work;
    		DELETE xm_1 xm_2 xm_cp;
-	RUN;
+		RUN;
 
 %MEND H2_cullis;

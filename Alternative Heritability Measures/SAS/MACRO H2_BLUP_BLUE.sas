@@ -38,7 +38,7 @@
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset or variable names starting with "xm_" as some are used in this macro.				*/
 /*																								*/
-/*	First version 25 September 2018																*/
+/*	Version 02 October 2018																		*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/

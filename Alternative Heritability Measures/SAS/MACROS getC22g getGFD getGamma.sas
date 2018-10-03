@@ -54,7 +54,7 @@
  \__, \___|\__|  \___( ) |_|   \__,_|_||_\__,_| |___/ 
  |___/               |/                               
 ************************************************************************************************/
-%MACRO getGFD (G=, ENTRY_NAME=, OUT_m_g=m_g, OUT_m_f=m_f, OUT_m_d=m_d);
+%MACRO getGFD (ENTRY_NAME=, G=, OUT_m_g=m_g, OUT_m_f=m_f, OUT_m_d=m_d);
 	PROC MEANS DATA=&G. NOPRINT;						/* Obtain dimensions of D (=part of G referring to entry main effect) */
 		VAR row; OUTPUT OUT=xm_temp;
 		RUN;

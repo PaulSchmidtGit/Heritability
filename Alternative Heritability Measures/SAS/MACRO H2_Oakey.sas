@@ -5,7 +5,7 @@
 /*                            |_||_/___|  \___/\__,_|_\_\___|\_, |                              */
 /*                                                           |__/                               */
 /*                                                                                              */
-/*	This macro computes the entry-based heritability also known as "generalized Heritability"   */
+/*	This macro computes the entry-based heritability also known as "generalized heritability"   */
 /*  based on eigenvalue analyses.                                                    		    */			
 /*																								*/
 /*	Example application code can be found on https://github.com/PaulSchmidtGit/Heritability     */
@@ -19,31 +19,31 @@
 /*	Requirements/Input:																			*/
 /*		The model that is used to analyze the data beforehand should have a random genotype     */
 /*      main in order to obtain the estimated variance-covariance matrices of (i) the random    */
-/*      genotype effects and (ii) the genotype BLUPs. Furthermore, the genotype main effect     */
-/*		must be the first random effect written in the model for this macro to work.            */
+/*      genotype effects and (ii) the genotype BLUPs. 											*/
 /*																								*/
 /*		SAS/STAT																				*/
 /*			Name of genetic effect																*/
 /*				ENTRY_NAME=	specifies the genotypic treatment factor (e.g. var, entry, gen, g).	*/	
-/*			Dataset 'G'																	        */
-/*				This dataset should contain the estimated variance-covariance matrix of the     */
-/*              random effects, which can be obtained via the G= MIXED / GLIMMIX ODS output.    */
 /*			Dataset 'MMEQSOL'																	*/
-/*				This dataset should contain the mixed model equations solution, which can be	*/
-/*				extracted from the MMEqSol= MIXED / GLIMMIX ODS output.  						*/
+/*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the solutions of the 	*/
+/*				mixed model equations, which requires the MMEQSOL option in the PROC statement. */
+/*			Dataset 'G'																	        */
+/*				G= specifies the MIXED / GLIMMIX ODS output with the estimated                  */
+/*				variance-covariance matrix of the random effects, which requires the G option   */
+/*				in the RANDOM statement.													    */
 /*			Name for output file																*/
 /*				OUTPUT= specifies the name for the output dataset.								*/
 /*																								*/
 /*	Note that in order to prevent complications due to overwritten data, one should not use 	*/
 /*	dataset names starting with "xm_" as some are used in this macro.							*/
 /*																								*/
-/*	Version 26 September 2018  																	*/
+/*	Version 02 October 2018  																	*/
 /*																								*/
 /*	Written by: Paul Schmidt (Paul.Schmidt@uni-hohenheim.de)									*/
 /*																								*/
 /************************************************************************************************/
 
-%MACRO H2Oakey(ENTRY_NAME=, MMEQSOL=, G= ,OUTPUT= );
+%MACRO H2Oakey(ENTRY_NAME=, MMEQSOL=, G= ,SOLUTIONF=, OUTPUT= );
 
 	/* Run Macros directly from GitHub */
 	filename _inbox "%sysfunc(getoption(work))/MACROS getC22g getGFD getGamma.sas";
@@ -51,14 +51,14 @@
 		url="https://raw.githubusercontent.com/PaulSchmidtGit/Heritability/master/Alternative%20Heritability%20Measures/SAS/MACROS%20getC22g%20getGFD%20getGamma.sas" out=_inbox;
 		run; %Include _inbox; filename _inbox clear;
 
-	/* (i) Extract C22g Matrix "m_c22g" from MMEQSOL */
-	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL.);
-
+	/* (i) Extract C22g Matrix "xm_c22g" from MMEQSOL */
+	%getC22g(ENTRY_NAME=&ENTRY_NAME., MMEQSOL=&MMEQSOL., SOLUTIONF=);
+	
 	/* (ii) Extract Gg Matrix "m_D" from G */
-	%getGFD(G=&G., ENTRY_NAME=&ENTRY_NAME.);
+	%getGFD(ENTRY_NAME=&ENTRY_NAME., G=&G.);
 
 	PROC IML;
-		USE m_C22g; READ ALL INTO C22g;
+		USE xm_C22g; READ ALL INTO C22g;
 		USE m_D;    READ ALL INTO D;
 
 		n_g		 = nrow(D);						  /* number of genotypes */
@@ -83,4 +83,3 @@
 	RUN;
 
 %MEND H2Oakey;
-

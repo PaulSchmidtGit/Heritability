@@ -28,7 +28,6 @@
 /*			Dataset 'MMEQSOL'																	*/
 /*				MMEQSOL= specifies the MIXED / GLIMMIX ODS output with the solutions of the 	*/
 /*				mixed model equations, which requires the MMEQSOL option in the PROC statement. */
-/*				PROC MIXED/GLIMMIX statement.													*/
 /*          Dataset 'SOLUTIONF'                                                                 */
 /*              SOLUTIONF= specifies the MIXED / GLIMMIX ODS output with fixed-effects solution */
 /*              vector, which requires the S option in the model statement.                     */

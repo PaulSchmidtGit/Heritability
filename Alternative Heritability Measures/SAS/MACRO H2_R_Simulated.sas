@@ -10,8 +10,8 @@
 /*	Example application code can be found on https://github.com/PaulSchmidtGit/Heritability     */
 /*																								*/
 /*	This method is based on																		*/
-/*		Piepho, H.-P., and J. Möhring. 2007. Computing heritability and selection response from */
-/*		unbalanced plant breeding trials. Genetics 177(3):1881–1888.							*/
+/*		Piepho, H.-P., and J. MÃ¶hring. 2007. Computing heritability and selection response from */
+/*		unbalanced plant breeding trials. Genetics 177(3):1881â€“1888.							*/
 /*	Comments in the code refer to respective equations from this article [i.e. (1), (2) etc.]   */
 /*																								*/
 /*	Requirements/Input:																			*/
@@ -104,10 +104,10 @@
 
 	DATA &H_OUT.; 
 		SET xm_H2_gg;
-		LABEL  H2_gg  ="H² as r² of (g-g^)"
-			 /*H2_gg_b="H² as r² of (g-g^) [alternative]"*/ ;
+		LABEL  H2_gg  ="HÂ² as rÂ² of (g-g^)"
+			 /*H2_gg_b="HÂ² as rÂ² of (g-g^) [alternative]"*/ ;
 		FORMAT H2_gg 
- 			 /*H2_gg_b [alternative]*/ 8.3;
+ 			 /*H2_gg_b [alternative]*/ 8.6;
 		RUN;
 
 	DATA &R_OUT.;

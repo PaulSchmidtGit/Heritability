@@ -94,8 +94,8 @@
 		  c		= c+t(g_hat)*g_hat;									/* Sum up all Variances g_hat 		*/
 		END;
 
-		H2_gg	=(r2/sim_max)*100; 									/* Get average Correlations g-g_hat */
-		/*H2_gg_b =(a*a/(b*c))*100*/								/* Get average Correlations g-g_hat (alternative calculation) */
+		H2_gg	=(r2/sim_max); 									/* Get average Correlations g-g_hat */
+		/*H2_gg_b =(a*a/(b*c))*/								/* Get average Correlations g-g_hat (alternative calculation) */
 		sel_mean=sel_mean/sim_max;									/* Get average Selection Gain/Response to Selection R 		  */
 
 		CREATE xm_H2_gg VAR {H2_gg /*H2_gg_b*/}; APPEND;
@@ -107,7 +107,7 @@
 		LABEL  H2_gg  ="H² as r² of (g-g^)"
 			 /*H2_gg_b="H² as r² of (g-g^) [alternative]"*/ ;
 		FORMAT H2_gg 
- 			 /*H2_gg_b [alternative]*/ 8.2;
+ 			 /*H2_gg_b [alternative]*/ 8.3;
 		RUN;
 
 	DATA &R_OUT.;

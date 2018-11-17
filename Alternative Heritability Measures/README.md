@@ -2,6 +2,7 @@
 There are several alternative estimation methods for broad-sense and narrow-sense heritability on an entry-mean basis. Please see our articles for more information:
 
 > P. Schmidt, J. Hartung, J. Rath and H.-P. Piepho. 2018. Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials. Crop Science **in revision**
+
 > P. Schmidt, J. Hartung and H.-P. Piepho. 2018. Heritability in plant breeding on a genotype-difference basis. Genetics **forthcoming**
 
 

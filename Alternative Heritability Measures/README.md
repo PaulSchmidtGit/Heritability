@@ -1,7 +1,9 @@
 # Alternative Estimation Methods for H² on Entry-Mean Basis
-There are several alternative estimation methods for broad-sense and narrow-sense heritability on an entry-mean basis. Please see our paper for more information:
+There are several alternative estimation methods for broad-sense and narrow-sense heritability on an entry-mean basis. Please see our articles for more information:
 
-> P. Schmidt, J. Hartung, J. Rath and H.-P. Piepho. 2018. Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials. Crop Science **forthcoming**
+> P. Schmidt, J. Hartung, J. Rath and H.-P. Piepho. 2018. Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials. Crop Science **in revision**
+> P. Schmidt, J. Hartung and H.-P. Piepho. 2018. Heritability in plant breeding on a genotype-difference basis. Genetics **forthcoming**
+
 
 ### Based on 4 different mixed model functions
 * `asreml()` of the R-package [ASReml-R Version 3.0](https://www.vsni.co.uk/software/asreml-r/)
@@ -29,6 +31,8 @@ Oakey | X | X | x | X |
 Reg | X | °° | X | X |
 SumDiv | X | °° | X | X |
 Simulated | ° | ° | x | X |
+Delta (BLUP) | X |  |  |  |
+Delta (BLUE) | X |  |  |  |
 
 ° *not possible to extract the full matrix (C) of the mixed model equation solutions*  <br />
 °° *not possible to obtain e.g. emmeans based on BLUEs*

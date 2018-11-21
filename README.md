@@ -3,6 +3,8 @@ This GitHub respository contains `R` and `SAS` codes for the calculation of a nu
 
 It is work in progress and will be updated from time to time.
 
+Please navigate the content via clicking on the folders above.
+
 #### Contact
 Please don't hesitate to contact me about any of this! <br />
 Paul Schmidt <br />

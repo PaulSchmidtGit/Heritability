@@ -8,7 +8,7 @@ Please navigate the content via clicking on the folders above.
 #### Contact
 Please don't hesitate to contact me about any of this! <br />
 Paul Schmidt <br />
-paul.schmidt@uni-hohenheim.de, 
+schmidtpaul@hotmail.de, 
 [LinkedIn](https://www.linkedin.com/in/schmidtpaul1989/), 
 [ResearchGate](https://www.researchgate.net/profile/Paul_Schmidt17)
 

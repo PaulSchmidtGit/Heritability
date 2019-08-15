@@ -1,5 +1,5 @@
 # Heritability in Plant Breeding
-This GitHub respository contains `R` and `SAS` codes for the calculation of a number of methods for heritability on an entry-mean basis. Its aim is to provide helpful examples for researchers and practicioners in the field of plant breeding or general cultivar evaluation trials.
+This GitHub respository contains `R` and `SAS` codes for the calculation of a number of methods for heritability in plant breeding and thus mostly heritability on an entry-mean basis. Its aim is to provide helpful examples for researchers and practicioners in the field of plant breeding or general cultivar evaluation trials.
 
 It is work in progress and will be updated from time to time.
 

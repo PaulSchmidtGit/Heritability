@@ -1,9 +1,9 @@
 # Alternative Estimation Methods for H² on Entry-Mean Basis
-There are several alternative estimation methods for broad-sense and narrow-sense heritability on an entry-mean basis. Please see our articles for more information:
+There are several alternative estimation methods for broad-sense and narrow-sense heritability on an entry-mean basis. Additionally, we proposed heritability on an entry-difference basis. Please see our articles for more information:
 
 > Schmidt, P.; Hartung, J.; Rath, J.; Piepho, H.-P. (2019): Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials. In Crop Science 59 (2), pp. 525–536. DOI: 10.2135/cropsci2018.06.0376.
 
-> P. Schmidt, J. Hartung and H.-P. Piepho. 2018. Heritability in plant breeding on a genotype-difference basis. Genetics **in print**
+> Schmidt, P., Hartung, J., Bennewitz, J., & Piepho, H. P. (2019). Heritability in Plant Breeding on a Genotype-Difference Basis. Genetics, genetics-302134.
 
 
 ### Based on 4 different mixed model functions

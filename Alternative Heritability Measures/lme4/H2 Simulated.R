@@ -1,44 +1,48 @@
-rm(list = ls())
-library(data.table)
-#######################
-# Import example data #
-#######################
 library(agridat)
+library(dplyr)
+library(lme4) 
+library(lmerTest) 
+library(purrr)
+
+### get example data
 dat <- john.alpha
 
-library(lme4)
-library(lmerTest)
-
+### fit model
+# random genotype effect
 g.ran <- lmer(data    = dat,
               formula = yield ~ rep + (1|gen) + (1|rep:block))
 
-# manually reconstruct mixed model equation for this specific example
-# to obtain var-cov-matrix for BLUPs (of gen effect).
-vc   <- as.data.table(VarCorr(g.ran)) # extract estimated variance components (vc)
+### handle model estimates
+# to my knowledge, lme4 does not offer a function to
+# extract variance-covariance-matrices for BLUPs (a.k.a. prediction error variance [PEV] matrix).
+# therefore, I here manually reconstruct mixed model equation for this specific example.
+# notice that this solution therefore only works for this specific model!
+
+vc <- g.ran %>% VarCorr %>% as_tibble # extract estimated variance components (vc)
 
 # R = varcov-matrix for error term
-n    <- length(summary(g.ran)$residuals) # numer of observations
-vc.e <- vc[grp=="Residual", vcov]      # error vc
-R    <- diag(n)*vc.e                   # R matrix = I * vc.e
+n <- g.ran %>% summary %>% pluck(residuals) %>% length # numer of observations
+vc_e <- vc %>% filter(grp=="Residual") %>% pull(vcov)  # error vc
+R    <- diag(n)*vc_e                                   # R matrix = I_n * vc_e
 
 # G = varcov-matrx for all random effects
-# varcov-matrix for genotypic effect
-n.g  <- summary(g.ran)$ngrps["gen"]    # number of genotypes
-vc.g <- vc[grp=="gen", vcov]         # genotypic vc
-G.g  <- diag(n.g)*vc.g               # gen part of G matrix = I * vc.g
+# subset of G regarding genotypic effects
+n_g  <- g.ran %>% summary %>% pluck("ngrps") %>% pluck("gen") # number of genotypes
+vc_g <- vc %>% filter(grp=="gen") %>% pull(vcov)              # genotypic vc
+G_g  <- diag(n_g)*vc_g                                        # gen part of G matrix = I * vc.g
 
-# varcov-matrix for incomplete block effect
-n.b  <- summary(g.ran)$ngrps["rep:block"] # number of incomplete blocks
-vc.b <- vc[grp=="rep:block", vcov]      # incomplete block vc
-G.b  <- diag(n.b)*vc.b                  # incomplete block part of G matrix = I * vc.b
+# subset of G regarding incomplete block effects
+n_b  <- g.ran %>% summary %>% pluck("ngrps") %>% pluck("rep:block") # number of incomplete blocks
+vc_b <- vc %>% filter(grp=="rep:block") %>% pull(vcov)              # incomplete block vc
+G_b  <- diag(n_b)*vc_b                                              # incomplete block part of G matrix = I * vc.b
 
-G <- bdiag(G.g, G.b) # G is blockdiagonal with G.g and G.b
-F <- G[diag(G)==vc.g,]
-D <- G[diag(G)==vc.g, diag(G)==vc.g]; all(D == G.g)
+G <- bdiag(G_g, G_b) # G is blockdiagonal with G.g and G.b in this example
+F <- G[diag(G)==vc_g, ]
+D <- G[diag(G)==vc_g, diag(G)==vc_g]; all(D == G_g)
 
 # Design Matrices
-X <- as.matrix(getME(g.ran, "X")) # Design matrix fixed effects
-Z <- as.matrix(getME(g.ran, "Z")) # Design matrix random effects
+X <- g.ran %>% getME("X") %>% as.matrix # Design matrix fixed effects
+Z <- g.ran %>% getME("Z") %>% as.matrix # Design matrix random effects
 
 # Mixed Model Equation (HENDERSON 1986; SEARLE et al. 2006)
 C11 <- t(X) %*% solve(R) %*% X
@@ -46,46 +50,41 @@ C12 <- t(X) %*% solve(R) %*% Z
 C21 <- t(Z) %*% solve(R) %*% X
 C22 <- t(Z) %*% solve(R) %*% Z + solve(G) 
 
-C <- as.matrix(rbind(cbind(C11, C12),  # Combine components into one matrix C
-                     cbind(C21, C22)))
+C <- rbind(cbind(C11, C12),  
+           cbind(C21, C22)) %>% as.matrix # Combine components into one matrix C
 
 # Mixed Model Equation Solutions 
-C.inv <- solve(C)                                # Inverse of C
-C22.g <- C.inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
-C22   <- C.inv[-c(1:3), -c(1:3)]                 # subset of C.inv that refers to all BLUPS
+C_inv <- C %>% solve                             # Inverse of C
+C22_g <- C_inv[levels(dat$gen), levels(dat$gen)] # subset of C.inv that refers to genotypic BLUPs
+C22   <- C_inv[-c(1:3), -c(1:3)]                 # subset of C.inv that refers to all BLUPS (columns 1-3 refer to fixed effects)
 
 # Gamma
 M       <- G - C22
-inv.G   <- solve(G)
-Q       <- F %*% inv.G %*% M %*% inv.G %*% t(F)
+G_inv   <- G %>% solve
+Q       <- F %*% G_inv %*% M %*% G_inv %*% t(F)
 Omega   <- rbind(cbind(D,Q), cbind(Q,Q))
-svdout  <- svd(Omega)
+svdout  <- Omega %>% svd
 Gamma   <- svdout$u %*% diag(sqrt(svdout$d))
 
-##############
-# Simulation #
-##############
-n.sim  <- 10000
+### Simulation
+n_sim  <- 10000  # number of simulation runs
 h2     <- list()
 R      <- list()
 
-for (i in 1:n.sim){
-  z       <- rnorm(n=(2*n.g), mean=0, sd=1)
+for (i in 1:n_sim){
+  z       <- rnorm(n=(2*n_g), mean=0, sd=1)
   w       <- Gamma %*% z
-  g.hat   <- w[1      :   n.g ]
-  g.true  <- w[(n.g+1):(2*n.g)]
-  g.hat.s <- sort(g.hat, decreasing=T)
-  #v       <- data.table(g.hat, g.true, ranks);  setorder(v, ranks)
+  g_hat   <- w[1      :   n_g ]
+  g_true  <- w[(n_g+1):(2*n_g)]
+  g_hat_s <- g_hat %>% sort(decreasing=T)
   selmean <- list() 
-  for (j in 1:n.g){
-    selmean[[j]] <- mean(g.hat.s[1:j])
+  for (j in 1:n_g){
+    selmean[[j]] <- g_hat_s[1:j] %>% mean
   }
-  R[[i]]  <- unlist(selmean)
-  h2[[i]] <- (t(g.hat) %*% g.true)**2 / (t(g.true) %*% g.true %*% t(g.hat) %*% g.hat)
+  R[[i]]  <- selmean %>% unlist
+  h2[[i]] <- (t(g_hat) %*% g_true)**2 / (t(g_true) %*% g_true %*% t(g_hat) %*% g_hat)
 }
 
-##########
-# H2 Sim #
-##########
-H2Sim <- mean(unlist(h2))
+### H2 Simulated
+H2Sim <- h2 %>% unlist %>% mean
 H2Sim # 0.7719582

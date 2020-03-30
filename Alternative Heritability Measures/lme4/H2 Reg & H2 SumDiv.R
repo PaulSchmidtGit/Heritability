@@ -1,56 +1,49 @@
-rm(list = ls())
-#######################
-# Import example data #
-#######################
 library(agridat)
-dat <- john.alpha
+library(dplyr)
+library(lme4) 
+library(lmerTest) 
+library(purrr)
 
-##############
-# Fit models #
-##############
-library(lme4)
-library(lmerTest)
-library(emmeans)
+### get example data
+dat <- john.alpha %>% 
+  mutate(Mu = 1) # Create dummy column for pseudo intercept in order to obtain estimate for Mu
 
-dat$Mu <- 1 #Create pseudo intercept to obtain estimate for Mu
-
+### fit model
 # random genotype effect
-g.ran <- lmer(data    = dat,
-              formula = yield ~ 0 + Mu + rep + (1|gen) + (1|rep:block))
+g_ran <- lmer(data    = dat,
+              formula = yield ~ 0 + Mu + rep + (1|gen) + (1|rep:block)) # Default intercept set to 0, pseudo intercept Mu instead
 
 # fixed genotype effect
 g.fix <- lmer(data    = dat,
               formula = yield ~          rep +    gen  + (1|rep:block))
 
-##########################
-# Handle model estimates #
-##########################
+### handle model estimates
+# genotypic BLUPs
+g_BLUPs <- g.ran %>% 
+  ranef %>% as_tibble %>% 
+  rename(BLUP=condval) %>%
+  filter(grpvar=="gen") %>%
+  mutate(gen = grp %>% as.character %>% as.factor) %>% 
+  select(gen, BLUP)
 
-# Obtaining genotypic BLUPs
-BLUPs <- as.data.table(ranef(g.ran)$gen, keep.rownames=T)
-names(BLUPs) <- c("gen", "BLUP")
-
-# Obtaining estimated marginal means based on genotypic BLUEs
-BLUEs <- as.data.table(emmeans(g.fix, pairwise ~ gen)$emmeans)[,c("gen", "emmean")] # get estimated marginal means for all genotype pairs
+# estimated marginal means (a.k.a. adjusted means) based on genotypic BLUEs
+g_EMMs <- g.fix %>% 
+  emmeans("gen") %>% 
+  as_tibble %>% 
+  select(gen, emmean)
 
 # Overall mean in g.ran
-Mu.ran <- as.data.table(emmeans(g.ran, "Mu"))[,c("emmean")] # get estimated marginal overall mean for g.ran model
+Mu_ran <- g.ran %>% emmeans("Mu") %>% as_tibble %>% pull(emmean)
 
-# Combine BLUPs and emmeans, obtain scaled emmeans
-Gpreds <- data.frame(gen    = BLUEs[,1], 
-                     BLUP   = BLUPs[,2], 
-                     emmean = BLUEs[,2], 
-                     scaled.emmean = BLUEs[,2]-as.numeric(Mu.ran))
+# Combine BLUPs and emmeans, compute scaled emmeans
+Gpreds <- left_join(g_EMMs, g_BLUPs, by="gen") %>% 
+  mutate(scaled_emmean = emmean - Mu_ran)
 
-################
-# H2 BLUP~BLUE #
-################
+### H2 BLUP~BLUE
 H2reg <- lm(data    = Gpreds,
-            formula = BLUP ~ 0 + scaled.emmean)$coefficients
+            formula = BLUP ~ 0 + scaled_emmean) %>% pluck("coefficients")
 H2reg #0.8178116
 
-############# 
-# H2 sumdiv #
-#############
-H2sumdiv <- sum(abs(Gpreds$BLUP)) / sum(abs(Gpreds$scaled.emmean))
+### H2 sumdiv
+H2sumdiv <- sum(abs(Gpreds$BLUP)) / sum(abs(Gpreds$scaled_emmean))
 H2sumdiv #0.8205183

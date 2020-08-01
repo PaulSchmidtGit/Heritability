@@ -5,6 +5,9 @@ It is work in progress and will be updated from time to time.
 
 Please navigate the content via clicking on the folders above.
 
+#### Note on this github account
+Please find my main github account [here](https://github.com/SchmidtPaul).
+
 #### Contact
 Please don't hesitate to contact me about any of this! <br />
 Paul Schmidt <br />

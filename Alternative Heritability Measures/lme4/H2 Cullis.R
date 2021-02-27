@@ -1,18 +1,20 @@
 library(agridat)
-library(dplyr)
 library(lme4) 
-library(lmerTest) 
-library(purrr)
+library(psych)
+library(tidyverse)
 
-### get example data
-dat <- john.alpha
 
-### fit model
+# get example data --------------------------------------------------------
+dat <- agridat::john.alpha
+
+
+# fit model ---------------------------------------------------------------
 # random genotype effect
-g.ran <- lmer(data    = dat,
-              formula = yield ~ rep + (1|gen) + (1|rep:block))
+g.ran <- lme4::lmer(data    = dat,
+                    formula = yield ~ rep + (1|gen) + (1|rep:block))
 
-### handle model estimates
+
+# handle model estimates --------------------------------------------------
 # to my knowledge, lme4 does not offer a function to
 # extract variance-covariance-matrices for BLUPs (a.k.a. prediction error variance [PEV] matrix).
 # therefore, I here manually reconstruct mixed model equation for this specific example.
@@ -21,9 +23,9 @@ g.ran <- lmer(data    = dat,
 vc <- g.ran %>% VarCorr %>% as_tibble # extract estimated variance components (vc)
 
 # R = varcov-matrix for error term
-n <- g.ran %>% summary %>% pluck(residuals) %>% length # numer of observations
-vc_e <- vc %>% filter(grp=="Residual") %>% pull(vcov)  # error vc
-R    <- diag(n)*vc_e                                   # R matrix = I_n * vc_e
+n    <- g.ran %>% summary %>% pluck(residuals) %>% length # numer of observations
+vc_e <- vc %>% filter(grp=="Residual") %>% pull(vcov)     # error vc
+R    <- diag(n)*vc_e                                      # R matrix = I_n * vc_e
 
 # G = varcov-matrx for all random effects
 # subset of G regarding genotypic effects
@@ -61,6 +63,7 @@ P_mu       <- diag(n_g, n_g) - one %*% t(one)  # P_mu = matrix that centers for 
 vdBLUP_sum <- psych::tr(P_mu %*% C22_g)        # sum of all variance of differences = trace of P_mu*C22_g
 vdBLUP_avg <- vdBLUP_sum * (2/(n_g*(n_g-1)))   # mean variance of BLUP-difference = divide sum by number of genotype pairs
 
-### H2 Cullis
+
+# H2 Cullis ---------------------------------------------------------------
 H2Cullis <- 1 - (vdBLUP_avg / 2 / vc_g)
 H2Cullis #0.8091336

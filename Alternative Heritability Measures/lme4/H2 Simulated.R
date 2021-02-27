@@ -1,15 +1,14 @@
 library(agridat)
-library(dplyr)
 library(lme4) 
-library(lmerTest) 
-library(purrr)
+library(tidyverse)
 
-### get example data
-dat <- john.alpha
+# get example data --------------------------------------------------------
+dat <- agridat::john.alpha
 
-### fit model
+
+# fit model ---------------------------------------------------------------
 # random genotype effect
-g.ran <- lmer(data    = dat,
+g_ran <- lmer(data    = dat,
               formula = yield ~ rep + (1|gen) + (1|rep:block))
 
 ### handle model estimates
@@ -18,31 +17,31 @@ g.ran <- lmer(data    = dat,
 # therefore, I here manually reconstruct mixed model equation for this specific example.
 # notice that this solution therefore only works for this specific model!
 
-vc <- g.ran %>% VarCorr %>% as_tibble # extract estimated variance components (vc)
+vc <- g_ran %>% VarCorr %>% as_tibble # extract estimated variance components (vc)
 
 # R = varcov-matrix for error term
-n <- g.ran %>% summary %>% pluck(residuals) %>% length # numer of observations
+n <- g_ran %>% summary %>% pluck(residuals) %>% length # numer of observations
 vc_e <- vc %>% filter(grp=="Residual") %>% pull(vcov)  # error vc
 R    <- diag(n)*vc_e                                   # R matrix = I_n * vc_e
 
 # G = varcov-matrx for all random effects
 # subset of G regarding genotypic effects
-n_g  <- g.ran %>% summary %>% pluck("ngrps") %>% pluck("gen") # number of genotypes
+n_g  <- g_ran %>% summary %>% pluck("ngrps") %>% pluck("gen") # number of genotypes
 vc_g <- vc %>% filter(grp=="gen") %>% pull(vcov)              # genotypic vc
 G_g  <- diag(n_g)*vc_g                                        # gen part of G matrix = I * vc.g
 
 # subset of G regarding incomplete block effects
-n_b  <- g.ran %>% summary %>% pluck("ngrps") %>% pluck("rep:block") # number of incomplete blocks
+n_b  <- g_ran %>% summary %>% pluck("ngrps") %>% pluck("rep:block") # number of incomplete blocks
 vc_b <- vc %>% filter(grp=="rep:block") %>% pull(vcov)              # incomplete block vc
 G_b  <- diag(n_b)*vc_b                                              # incomplete block part of G matrix = I * vc.b
 
-G <- bdiag(G_g, G_b) # G is blockdiagonal with G.g and G.b in this example
+G <- bdiag(G_g, G_b) # G is blockdiagonal with G_g and G_b in this example
 F <- G[diag(G)==vc_g, ]
 D <- G[diag(G)==vc_g, diag(G)==vc_g]; all(D == G_g)
 
 # Design Matrices
-X <- g.ran %>% getME("X") %>% as.matrix # Design matrix fixed effects
-Z <- g.ran %>% getME("Z") %>% as.matrix # Design matrix random effects
+X <- g_ran %>% getME("X") %>% as.matrix # Design matrix fixed effects
+Z <- g_ran %>% getME("Z") %>% as.matrix # Design matrix random effects
 
 # Mixed Model Equation (HENDERSON 1986; SEARLE et al. 2006)
 C11 <- t(X) %*% solve(R) %*% X

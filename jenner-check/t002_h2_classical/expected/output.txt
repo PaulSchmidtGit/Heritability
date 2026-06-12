@@ -1,0 +1,47 @@
+          The Mixed Procedure           
+           Model Information            
+
+Item                               Value
+-------------------------  -------------
+Dependent Variable                     y
+Estimation Method                   REML
+Degrees of Freedom Method  Kenward-Roger
+Number of Observations                72
+
+ Covariance Parameter Estimates  
+
+Cov Parm   Subject       Estimate
+---------  ------------  --------
+Intercept  gen             0.1429
+Intercept  rep_block_re    0.0702
+Residual                   0.0816
+
+        Type III Tests of Fixed Effects         
+
+Effect      Num DF    Den DF   F Value    Pr > F
+--------  --------  --------  --------  --------
+rep              2      12.5      8.46    0.0047
+
+         Fit Statistics          
+
+Statistic                   Value
+-----------------------  --------
+-2 Res Log Likelihood     95.3910
+AIC (Smaller is Better)  107.3910
+BIC (Smaller is Better)  121.0510
+                                               Variance Components (REML)                                               
+
+
+  VarComp    CovParm  Estimate
+---------  ---------  --------
+gen        Intercept    0.1429
+rep*block  Intercept    0.0702
+Residual   Residual     0.0816
+
+                                            Heritability on Entry-Mean Basis                                            
+
+
+Genotypic variance  Residual variance  Replicates  H2 (entry-mean basis)
+------------------  -----------------  ----------  ---------------------
+            0.1429             0.0816           3                 0.8401
+

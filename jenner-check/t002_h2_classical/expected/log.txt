@@ -1,0 +1,58 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA a
+
+NOTE: Processing inline DATALINES (72 lines)
+
+NOTE: Read 72 rows from DATALINES.
+NOTE: Wrote a (72 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC MIXED data=a
+
+NOTE: PROC MIXED: using R wrapper (mixed_renderer.R).
+NOTE: PROC MIXED results written to: ./ods_output/mixed_results.spec.json
+NOTE: lmer formula: y ~ rep + (1 | gen) + (1 | rep_block_re)
+NOTE: Warning message:
+NOTE: In readLines(con = "stdin") : incomplete final line found on 'stdin'
+NOTE: ODS plot written: mixed_residuals_vs_predicted.spec.json
+NOTE: ODS plot written: mixed_residual_histogram_panel.spec.json
+NOTE: ODS plot written: mixed_residuals_vs_obs_order.spec.json
+NOTE: ODS plot written: mixed_qq_plot.spec.json
+NOTE: ODS plot written: mixed_diagnostics.spec.json
+NOTE: PROC MIXED ODS Graphics generated.
+NOTE: ODS OUTPUT: CovParms written to 'Covparms'.
+NOTE: DATA Covparms2
+
+
+NOTE: Read 3 rows from Covparms.
+NOTE: Wrote Covparms2 (3 rows, 3 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA _null_
+
+
+NOTE: Read 3 rows from Covparms2.
+NOTE: Wrote _null_ (3 rows, 3 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA H2_classical
+
+
+NOTE: Wrote H2_classical (1 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to Variance Components (REML).
+NOTE: PROC PRINT data=Covparms2
+
+NOTE: PROC PRINT completed: 3 observations printed, 3 variables
+NOTE: Option TITLE changed to Heritability on Entry-Mean Basis.
+NOTE: PROC PRINT data=H2_classical
+
+NOTE: PROC PRINT completed: 1 observations printed, 4 variables

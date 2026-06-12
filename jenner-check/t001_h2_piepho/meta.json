@@ -1,0 +1,8 @@
+{
+  "bundle": "t001_h2_piepho",
+  "source_file": "Alternative Heritability Measures/SAS/example H2_Piepho.sas",
+  "source_blob_sha": "25b1a3deb3c6f300048b78bea9d16886611802b7",
+  "source_commit": "c5d54fc8bfd559d276c178eb8bc72c0282567440",
+  "tier": "real_data",
+  "notes": "H2 Piepho estimator (Piepho & Mohring 2007 eq.19): two PROC MIXED runs produce variance components (genotype-random) and pairwise differences (genotype-fixed), then H2 = sigma_g^2 / (sigma_g^2 + 0.5 * avd_BLUE). Macro %H2_piepho inlined directly (original uses proc http to load from GitHub). Data is inline DATALINES from the original example script."
+}

@@ -1,0 +1,74 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA a
+
+NOTE: Processing inline DATALINES (72 lines)
+
+NOTE: Read 72 rows from DATALINES.
+NOTE: Wrote a (72 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC MIXED data=a
+
+NOTE: PROC MIXED: using R wrapper (mixed_renderer.R).
+NOTE: PROC MIXED results written to: ./ods_output/mixed_results.spec.json
+NOTE: lmer formula: y ~ rep + (1 | gen) + (1 | rep_block_re)
+NOTE: Warning message:
+NOTE: In readLines(con = "stdin") : incomplete final line found on 'stdin'
+NOTE: ODS plot written: mixed_residuals_vs_predicted.spec.json
+NOTE: ODS plot written: mixed_residual_histogram_panel.spec.json
+NOTE: ODS plot written: mixed_residuals_vs_obs_order.spec.json
+NOTE: ODS plot written: mixed_qq_plot.spec.json
+NOTE: ODS plot written: mixed_diagnostics.spec.json
+NOTE: PROC MIXED ODS Graphics generated.
+NOTE: ODS OUTPUT: CovParms written to 'Covparms'.
+NOTE: PROC MIXED data=a
+
+NOTE: PROC MIXED: using R wrapper (mixed_renderer.R).
+NOTE: PROC MIXED results written to: ./ods_output/mixed_results.spec.json
+NOTE: lmer formula: y ~ gen + rep + (1 | rep_block_re)
+NOTE: Warning message:
+NOTE: In readLines(con = "stdin") : incomplete final line found on 'stdin'
+NOTE: ODS plot written: mixed_residuals_vs_predicted.spec.json
+NOTE: ODS plot written: mixed_residual_histogram_panel.spec.json
+NOTE: ODS plot written: mixed_residuals_vs_obs_order.spec.json
+NOTE: ODS plot written: mixed_qq_plot.spec.json
+NOTE: ODS plot written: mixed_diagnostics.spec.json
+NOTE: PROC MIXED ODS Graphics generated.
+NOTE: ODS OUTPUT: CovParms written to 'Covparms'.
+NOTE: ODS OUTPUT: Diffs written to 'Diffs'.
+NOTE: DATA Diffs2
+
+
+NOTE: Read 100 rows from Diffs.
+NOTE: Wrote Diffs2 (100 rows, 11 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC MEANS
+NOTE: Output dataset MeanVar has 1 observations and 3 variables.
+NOTE: PROC MEANS statement used.
+NOTE: DATA _null_
+
+
+NOTE: Read 2 rows from Covparms.
+NOTE: Wrote _null_ (0 rows, 2 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA H2_piepho
+
+
+NOTE: Read 1 rows from MeanVar.
+NOTE: Wrote H2_piepho (1 rows, 3 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: ODS HTML: Destination opened.
+NOTE: Option TITLE changed to Ad hoc H2 'Piepho'.
+NOTE: PROC PRINT data=H2_piepho
+
+NOTE: PROC PRINT completed: 1 observations printed, 3 variables

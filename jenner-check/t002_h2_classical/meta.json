@@ -1,0 +1,8 @@
+{
+  "bundle": "t002_h2_classical",
+  "source_file": "Alternative Heritability Measures/SAS/example H2_BLUP_BLUE.sas",
+  "source_blob_sha": "b2c0a072936caee62bc58c1f81a092733db3f1f0",
+  "source_commit": "c5d54fc8bfd559d276c178eb8bc72c0282567440",
+  "tier": "real_data",
+  "notes": "Classical entry-mean heritability from PROC MIXED variance components: H2 = sigma_g^2 / (sigma_g^2 + sigma_e^2/r). Derived from example H2_BLUP_BLUE.sas - same dataset and same PROC MIXED model (genotype random, replicate fixed, incomplete blocks random). The original script loads macro %H2_BLUE_BLUP via proc http; this bundle uses the fundamental variance component result directly. Data is inline DATALINES from the original example script."
+}

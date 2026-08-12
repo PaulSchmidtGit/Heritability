@@ -5,9 +5,11 @@ There are several alternative estimation methods for broad-sense and narrow-sens
 * Schmidt, P.; Hartung, J.; Rath, J.; Piepho, H.-P. (2019): **Estimating broad-sense heritability with unbalanced data from agricultural cultivar trials**. In Crop Science 59 (2), pp. 525–536. DOI: [10.2135/cropsci2018.06.0376](https://doi.org/10.2135/cropsci2018.06.0376).
 * Schmidt, P., Hartung, J., Bennewitz, J., & Piepho, H. P. (2019). **Heritability in Plant Breeding on a Genotype-Difference Basis**. Genetics, genetics-302134. DOI: [10.1534/genetics.119.302134](https://doi.org/10.1534/genetics.119.302134).
 
+> 📦 **There is now an R package for this:** most of the measures below are available in the **[`heritable`](https://github.com/anu-aagi/heritable)** R package (docs: <https://anu-aagi.github.io/heritable/>), which computes various heritability estimates directly from a fitted mixed model. The example code here remains useful for understanding how each estimator is computed by hand.
+
 Above, you will find different folders containing example code for different mixed model packages:
 
-* `asreml()` of the R-package [ASReml-R Version 3.0](https://www.vsni.co.uk/software/asreml-r/)
+* `asreml()` of the R-package [ASReml-R](https://www.vsni.co.uk/software/asreml-r/) — the original examples use **Version 3.0**; an [**ASReml-R 4.2.x** version (community-contributed, untested by us)](ASReml-R/ASReml%204.2%20(community-contributed)) is provided in parallel
 * `mmer2()`  of the R-package [sommer](https://cran.r-project.org/web/packages/sommer/index.html)
 * `lmer()`   of the R-package [lme4](http://lme4.r-forge.r-project.org/)
 * `PROC MIXED` in [SAS](https://www.sas.com/en_us/home.html)
